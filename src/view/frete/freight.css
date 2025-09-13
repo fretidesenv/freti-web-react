@@ -1,0 +1,93 @@
+.freight-content {
+    width: 100%;
+    padding: 5%;
+    margin: auto;
+    height: 100vh;
+}
+
+.btn-cadastrar{
+    background-color: rgb(255, 49, 0);
+    color: #f2f2f2;
+
+}
+
+.btn-cadastrar:hover{
+    background-color: #f2f2f2 !important;
+    color: rgb(255, 49, 0) !important;
+    border-color: rgb(255, 49, 0) !important;
+}
+
+.btn-class-cadastrar{
+    padding-top: 10%;
+    padding-bottom: 5%;
+}
+
+.h11{
+    color: red;
+}
+
+#alert-dialog-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+#alert-dialog-title i {
+    color: #FEDE00;
+}
+#alert-dialog-title #titleInform {
+    font-size: 26px;
+}
+.OK {
+    width: 30%;
+    margin-right: 35%;
+    margin-left: 35%;
+    background-color: rgb(255, 49, 0);
+    color: #f2f2f2;
+    border: none;
+    border-radius: .25rem;
+    font-size: 1rem;
+    text-align: center;
+    line-height: 1.5;
+    font-weight: 400;
+    vertical-align: middle;
+    cursor: pointer;
+    padding: .375rem .75rem;
+}
+.OK:hover {
+    background-color: #f2f2f2 !important;
+    color: rgb(255, 49, 0) !important;
+    border-color: rgb(255, 49, 0) !important;
+}
+
+.list-container {
+    display: flex;
+    gap: 20px; /* Espaço entre as colunas */
+}
+
+.category-column {
+    display: flex;
+    flex: 1; /* Faz com que as colunas ocupem o mesmo espaço */
+    padding: 10px;
+    border-radius: 5px;
+    flex-direction: column;
+    white-space: nowrap;
+    gap: 5px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.left-section {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    margin-left: 10px;
+}
+
+.mb-3 {
+    margin-left: 10px;
+}
+
+.checkbox-container input {
+    margin-right: 8px;
+}

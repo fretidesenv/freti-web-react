@@ -1,0 +1,58 @@
+#fullName:invalid {
+    border-color: red;
+}
+#confirmPassword:invalid {
+    border-color: red;
+}
+#password:invalid {
+    border-color: red;
+}
+#cpf:invalid {
+    border-color: red;
+}
+#contact:invalid {
+    border-color: red;
+}
+#formOfPayment:invalid {
+    border-color: red;
+}
+#email:invalid {
+    border-color: red;
+}
+#documentCnhExpiration:invalid {
+    border-color: red;
+}
+#birthDateDriver:invalid {
+    border-color: red;
+}
+
+.password-input {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.row {
+    padding: 8px;
+}
+
+.fade-message {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

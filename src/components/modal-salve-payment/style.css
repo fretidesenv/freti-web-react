@@ -1,0 +1,120 @@
+.custom-date-picker-popup {
+    position: absolute !important;
+    left: 220px !important; /* ajuste com base na largura do seu input */
+    top: 0 !important;
+}
+
+.tipo {
+    display: flex;
+    gap: 100px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.formMotoType {
+    display: flex;
+    gap: 100px;
+    height: 50px;
+    margin-top: 70px;
+}
+
+.formValOriStatus {
+    display: flex;
+    gap: 100px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.formDescVencimento {
+    display: flex;
+    gap: 100px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.formStatus {
+    width: 208px;
+    margin-top: 20px;
+}
+
+.formDataAtt {
+    width: 208px;
+}
+
+.formDataAtt p {
+    margin-bottom: 0.3%;
+}
+
+.formMotorista {
+    height: 60px;
+    width: 208px;
+    margin: 0;
+    padding: 0;
+}
+
+#formDespesasMotorista {
+    width: 285px;
+    background-color: #f5f5f5;
+    color: #a9a9a9;
+    border: 1px solid #ccc;
+}
+
+#InputDinero {
+    width: 208px;
+}
+
+p {
+    margin: 0;
+    margin-bottom: -4%;
+}
+
+#InputDinero2 {
+    width: 285px;
+}
+
+.tipoObs {
+    margin-left: 0%;
+}
+
+.tipoObs2 p {
+    margin-bottom: 0%;
+}
+
+.formSelectStatusDespesa {
+    height: 20px;
+    margin-top: 5%;
+}
+
+.freteStatus {
+    white-space: nowrap;
+}
+
+.valorDataBaixa {
+    /* margin-top: 3.5%; */
+    display: flex;
+    gap: 100px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.informacao {
+    position: relative;
+    top: 6%;
+    cursor: text;
+}
+
+.InputTypeText {
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    width: 208px;
+}
+
+.input-group-text {
+    margin-right: 8px;
+}

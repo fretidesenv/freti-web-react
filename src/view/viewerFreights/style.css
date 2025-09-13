@@ -1,0 +1,15 @@
+.graphic-div{
+    display: flex;
+    justify-content: space-between;
+}
+
+.graphic-title{
+    text-align: center;
+    font-weight: 700;
+}
+
+.freight-container-header{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}

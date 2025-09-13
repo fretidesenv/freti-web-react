@@ -1,0 +1,93 @@
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link, Navigate} from "react-router-dom";
+import PersistentDrawerLeft from "../../components/navMenu/NavMenu";
+import firebase from '../../config/firebase';
+import DataPaymentTable from "../../components/Data-payment-table/dataPaymentTable";
+import { Button, Form, Modal, Select } from "antd";
+import PaymentModal from "../../components/modal-salve-payment/modal-payment";
+import { useNavigate } from "react-router-dom";
+import NewMiniDrawer from "../../components/navMenu/menu-nav";
+require('firebase/auth')
+
+function PaymentList(){
+    const db = firebase.firestore();
+
+    const navigate = useNavigate();
+
+    const [listPayment, setListPayment] = useState([]);
+    const [carregando, setCarregando] = useState(1);
+    
+    let paymentList = [];
+
+    var userLogado = useSelector(state => state.usuarioLogado);
+    const user = useSelector(state => state.user)
+
+    useEffect(() => {
+
+        if(userLogado > 0) {
+
+            if(user.perfil === "Master"){
+
+                db.collection('payment')
+                .get().then( async (result) => {
+                    result.docs.forEach(doc => {
+
+                        paymentList.push({
+                            id: doc.id,
+                            ...doc.data()
+                        });
+                    })
+                    
+                    setListPayment(paymentList)
+                    setCarregando(0)
+                }).catch(error => {
+                    setCarregando(0)
+                    console.log(error)
+                });
+
+            }
+        }
+    },[carregando]);
+
+    return(
+        <>
+            { 
+                useSelector(state => state.usuarioLogado) > 0 ? 
+                    <NewMiniDrawer divOpen={
+                        <div className="freight-content">
+                            <div className="container mb-3">
+                                <div className="row">
+                                    <div className="col-5">
+                                        <h4>Pagamentos</h4>
+                                    </div>
+                                    <div className="col-5">
+                                    </div>
+                                    <div className="col-2">
+                                        <div className="col-md-11 control-label">
+                                            {/* <Link to={"/newOcurrence"}>
+                                                <Button id="ButtonHover" type="primary" icon={<AddIcon />}>
+                                                    Novo
+                                                </Button>
+                                            </Link> */}
+                                        </div>
+                                    </div>
+                                </div>        
+                            </div>
+                            <div>
+                                <div style={{ height: 400, width: '100%' }}>
+                                    <DataPaymentTable data={listPayment}/>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                }/>
+                : 
+                <Navigate to='/login' />
+            }
+        </>
+    );
+}
+
+export default PaymentList;

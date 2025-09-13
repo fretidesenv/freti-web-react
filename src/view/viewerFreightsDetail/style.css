@@ -1,0 +1,53 @@
+.freight-content-details{
+    width: 100%;
+    padding: 0% 5% 5% 5%;
+    margin: auto;
+    height: 100vh;
+}
+
+.driver-infos{
+    padding: 2rem;
+    height: 50rem;
+    width: 100%;
+}
+
+.driver-infos-row{
+    display: flex;
+    height: 30rem;
+    width: 100%;
+    margin-top: 2rem;
+    /* border: 1px solid black */
+}
+    
+.graphic-div-details{
+    height: 30rem;
+    width: 100%;
+}
+
+.viewer-maps-section{
+    height: 30rem;
+    width: 100%;
+}
+
+.freight-list{
+    align-items: flex-end;
+    height: 30rem;
+    width: 100%;
+    margin-top: 3rem;
+}
+
+.freights-card{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.table-coordenadas,
+.table-coordenadas tr th,
+.table-coordenadas tr td,
+.table-pontos-de-parada tr,
+.table-pontos-de-parada tr th,
+.table-pontos-de-parada tr td {
+    border: 1px solid black;
+    padding: 4px;
+}

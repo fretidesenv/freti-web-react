@@ -1,0 +1,82 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin="*"/>
+</head>
+<body>
+    <div id="map" style="height: 500px; width: 100%;"></div>
+    <script type="text/javascript">
+        const apiKey = "IBDG64ufMGwKSPSsA5nCfGZGgXv9kRRf";
+        const map = L.map('map').setView([-23.986178, -46.308402], 13);
+
+        L.tileLayer(`https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png`, {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        const icon = L.icon({
+            iconUrl: "iconfinder_Marker_1891030.png",
+            iconSize: [32, 32],
+            iconAnchor: [20, 42],
+            popupAnchor: [-3, -32]
+        });
+
+        L.marker([-23.986437, -46.308303], { icon }).addTo(map)
+            .bindPopup("<strong>Estátua do Pescador</strong>")
+            .openPopup();
+    </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+</body>
+</html>
+
+
+
+<!-- <html>
+  <head>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta charset="utf-8"/>
+    <script src="https://maps.maplink.global"></script>
+    <style>
+      #tempMapa {position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+    </style>
+
+  </head>
+  <body>
+
+    <h1>Mapa mente</h1>
+    <div id="tempMapa"></div>
+    
+    <script type = "text/javascript">
+      const apiKey = "IBDG64ufMGwKSPSsA5nCfGZGgXv9kRRf";
+      const maplink = new MaplinkMap(apiKey, "tempMapa", { renderType: "png" },  { center: [-23.986178, -46.308402] });
+
+      const icon = maplink.icon(
+          "iconfinder_Marker_1891030.png",
+          null,
+          {
+              iconSize: [32, 32],
+              shadowSize: [0, 0],
+              iconAnchor: [20, 42],
+              shadowAnchor: [0, 0],
+              popupAnchor: [-3, -32]
+          });
+
+          maplink.marker({
+            latitude: -23.986437,
+            longitude: -46.308303
+          }, {
+              icon, 
+              popup: "<strong>Estátua do Pescador</strong>"
+          });
+
+  </script>
+  </body>
+</html> --> 

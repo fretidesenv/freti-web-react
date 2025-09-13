@@ -1,0 +1,31 @@
+.MuiDataGrid-columnHeader .MuiDataGrid-iconSeparator{
+    display: none;
+}
+
+.datagrid-component{
+    height: 100%;
+}
+.datagrid-wrapper{
+    height: 80%;
+    padding-bottom: 1rem;
+}
+.datagrid-component .MuiTablePagination-selectLabel{
+    margin:0;
+}
+.datagrid-component .MuiTablePagination-displayedRows{
+    margin:0;
+}
+.datagrid-component .MuiDataGrid-columnHeaderTitle{
+    font-size: 13px;
+    font-weight: bold;
+}
+.datagrid-component .MuiDataGrid-cell:focus-within {
+    outline: none !important;
+}
+.datagrid-component [data-id="total"]{
+    font-weight: bold;
+}
+
+.datagrid-component [data-id="total"] .MuiCheckbox-root, .datagrid-component [data-id="total"] button {
+    display: none;
+}
