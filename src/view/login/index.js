@@ -4,7 +4,7 @@ import firebase from '../../config/firebase';
 import { sendPasswordResetEmail, getAuth } from 'firebase/auth';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, Navigate } from "react-router-dom";
-import logoImage from '../../image/logo.jpeg';
+import logoImage from '../../image/logo.png';
 import { Button } from "@mui/material";
 import packageJson from '../../../package.json'
 import { Footer } from "antd/es/layout/layout";
@@ -26,7 +26,7 @@ const Card = styled.div`
  
 const LeftSide = styled.div`
   flex: 1;
-  background-color: #012442;
+  background-color: var(--primary-color);
   color: #fff;
   padding: 10px;
   text-align: center;
@@ -196,16 +196,15 @@ function Login(){
 
                     <Button     
                         style={{
-                              backgroundColor: 'red',
-                              color: 'white',
-                              padding: '10px',
-                              border: 'none',
-                              cursor: 'pointer',
-                              width: '100%',
-                              paddingTop: '10px',
-                              marginTop: '20px',                              
-                              borderRadius: '10px'
-                              
+                            backgroundColor: 'var(--terciary-color)',
+                            color: 'white',
+                            padding: '10px',
+                            border: 'none',
+                            cursor: 'pointer',
+                            width: '100%',
+                            paddingTop: '10px',
+                            marginTop: '20px',                              
+                            borderRadius: '10px'
                         }}
                         type="submit"
                         fullWidth

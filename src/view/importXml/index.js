@@ -1839,58 +1839,61 @@ function ImportXml() {
               // style={{ backgroundColor: "red" }}
               className="form-signin mx-auto mb-4 mb-lg-6"
             >
-              <div className="row" style={{ justifyContent: "flex-end" }}>
-                <CustomButton 
-                  size="small"
-                  type="primary"
-                  style={{
-                    backgroundColor: "rgb(1, 36, 67)",
-                    height: 32,
-                    borderRadius: 6,
-                  }}
-                  className="col-md-3 CustomButton"
-                  onClick={openModalAdvancedSearchModal}
-                >
-                  Consulta Avançada
-                </CustomButton>
-
-                <div className="col-md-2">
-                  <input
-                    style={{ display: "none" }}
-                    id="file-upload"
-                    type="file"
-                    accept=".xml"
-                    onChange={async (event) => {
-                      if (event.target.files.length === 0) {
-                        // O usuário cancelou a seleção do arquivo
-                        setIsAdding(false);
-                      } else {
-                        setIsAdding(true);
-                        await handleMultipleFileChange(event);
-                      }
-                    }}
-                    multiple
-                  />
+              <div className="row" style={{ display: "flex" }}>
+                <h2 style={{ margin:'0 0 20px 0', width: "25%" }}>Listagem XML</h2>
+                <div style={{ justifyContent: "flex-end", width: "75%", display: "flex", gap: 10 }}>
                   <CustomButton
+                    size="small"
                     type="primary"
-                    htmlFor="file-upload"
                     style={{
-                      padding: "0",
+                      backgroundColor: "var(--terciary-color)",
+                      height: 32,
+                      borderRadius: 6,
                     }}
-                    className="CustomButton"
+                    className="col-md-3 CustomButton"
+                    onClick={openModalAdvancedSearchModal}
                   >
-                    <label
-                      htmlFor="file-upload"
-                      className="custom-file-upload"
-                      style={{
-                        cursor: "pointer",
-                        textAlign: "center",
-                        borderColor: "rgb(255, 49, 0)",
-                      }}
-                    >
-                      {isAdding ? "Adicionando..." : "Importar XML"}
-                    </label>
+                    Consulta Avançada
                   </CustomButton>
+
+                  <div className="col-md-2">
+                    <input
+                      style={{ display: "none" }}
+                      id="file-upload"
+                      type="file"
+                      accept=".xml"
+                      onChange={async (event) => {
+                        if (event.target.files.length === 0) {
+                          // O usuário cancelou a seleção do arquivo
+                          setIsAdding(false);
+                        } else {
+                          setIsAdding(true);
+                          await handleMultipleFileChange(event);
+                        }
+                      }}
+                      multiple
+                    />
+                    <CustomButton
+                      type="primary"
+                      htmlFor="file-upload"
+                      style={{
+                        padding: "0",
+                      }}
+                      className="CustomButton"
+                    >
+                      <label
+                        htmlFor="file-upload"
+                        className="custom-file-upload"
+                        style={{
+                          cursor: "pointer",
+                          textAlign: "center",
+                          borderColor: "var(--terciary-color)",
+                        }}
+                      >
+                        {isAdding ? "Adicionando..." : "Importar XML"}
+                      </label>
+                    </CustomButton>
+                  </div>
                 </div>
                 {isAdding && (
                   <div className="col-md-4">
@@ -1904,7 +1907,6 @@ function ImportXml() {
                 )}
               </div>
             </div>
-            <h2 style={{ margin:'0 0 20px 0' }}>Listagem XML</h2>
             <div>
               <DataGrid 
                 columns={columns} 
@@ -2385,7 +2387,7 @@ function ImportXml() {
               <Button
                 variant="contained"
                 onClick={handleUpdateDocumentProvider}
-                className="CustomButton"
+                className="CustomButton btn-cadastrar"
               >
                 Salvar
               </Button>

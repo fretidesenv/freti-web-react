@@ -836,14 +836,14 @@ const { TabPane } = Tabs;
                                 <Button
                                     type="primary"
                                     onClick={() => downloadFile(idMDFe, statusMDFe, "pdf")}
-                                    style={{ marginRight: '8px', backgroundColor: '#012442', borderColor: '#012442' }}
+                                    style={{ marginRight: '8px', backgroundColor: 'var(--primary-color)', borderColor: 'var(--primary-color)' }}
                                 >
                                     PDF
                                 </Button>
                                 <Button 
                                     type="primary"
                                     onClick={() => downloadFile(idMDFe, statusMDFe, "xml")}
-                                    style={{ marginRight: '8px', backgroundColor: '#012442', borderColor: '#012442' }}
+                                    style={{ marginRight: '8px', backgroundColor: 'var(--primary-color)', borderColor: 'var(--primary-color)' }}
                                 >
                                     XML
                                 </Button>
@@ -949,7 +949,7 @@ const { TabPane } = Tabs;
                             <Col span={4}>
                                 <div className="col-md-12">
                                 
-                                    <Tooltip color="#012442"  title="ETC → Empresa de Transporte de Cargas (transportadora com CNPJ, frota própria e registro na ANTT).
+                                    <Tooltip color="var(--primary-color)"  title="ETC → Empresa de Transporte de Cargas (transportadora com CNPJ, frota própria e registro na ANTT).
                                                                         TAC → Transportador Autônomo de Cargas (pessoa física, motorista independente com registro na ANTT).
                                                                         CTC → Cooperativa de Transporte de Cargas (cooperativa de transportadores, com CNPJ e registro na ANTT).">
                                         <label htmlFor="tpTransp" className="form-label">tpTransp <span style={{ color: 'red' }}>*</span></label>
@@ -1230,7 +1230,7 @@ const { TabPane } = Tabs;
 
                             {/* <Col span={2}>
                                 <div className="col-md-12">
-                                    <Tooltip color="#012442"  title="">
+                                    <Tooltip color="var(--primary-color)"  title="">
                                         <label htmlFor="indCanalVerde" className="form-label">indCanalVerde</label>
                                     </Tooltip>
 
@@ -1245,7 +1245,7 @@ const { TabPane } = Tabs;
 
                             <Col span={2}>
                                 <div className="col-md-12">
-                                    <Tooltip color="#012442"  title="0 → Não haverá carregamento posterior (toda a carga é embarcada no início da viagem).
+                                    <Tooltip color="var(--primary-color)"  title="0 → Não haverá carregamento posterior (toda a carga é embarcada no início da viagem).
                                                                     1 → Sim, haverá carregamento posterior (o veículo sairá e depois pegará mais carga em outro local durante o trajeto).">
                                         <label htmlFor="indCarregaPosterior" className="form-label">indCarregaPosterior</label>
                                     </Tooltip>
@@ -1686,7 +1686,7 @@ const { TabPane } = Tabs;
                                                 <div className="col-md-12">
                                                 <label htmlFor="vContratoGlobal" 
                                                 className="form-label">
-                                                    <Tooltip color="#012442"  title="Esse campo é obrigatório quando o tipo de transportador for: ETC (Empresa de Transporte de Cargas)
+                                                    <Tooltip color="var(--primary-color)"  title="Esse campo é obrigatório quando o tipo de transportador for: ETC (Empresa de Transporte de Cargas)
                                                                 E estiver emitindo um MDF-e atrelado a um contrato de transporte global.
                                                                 Por exemplo:
                                                                 Um contrato de frete mensal, anual ou por período, com o embarcador.
@@ -2583,7 +2583,7 @@ const { TabPane } = Tabs;
                                 <Col span={4}>
                                     <div className="col-md-12">
                                         <label htmlFor="cepCarrega" className="form-label">
-                                            <Tooltip  color="#012442"  title="1 - Emitente do MDF-e 22 - Responsável pela contratação do serviço de transporte (contratante) Dados obrigatórios apenas no modal Rodoviário, depois da lei 11.442/07. Para os demais modais esta informação é opcional.">
+                                            <Tooltip  color="var(--primary-color)"  title="1 - Emitente do MDF-e 22 - Responsável pela contratação do serviço de transporte (contratante) Dados obrigatórios apenas no modal Rodoviário, depois da lei 11.442/07. Para os demais modais esta informação é opcional.">
                                                 Responsável Seguro <span style={{ color: 'red' }}>*</span>
                                             </Tooltip>
                                         </label>
@@ -2750,7 +2750,7 @@ const { TabPane } = Tabs;
                                 <Col span={4}>
                                     <div className="col-md-12">
                                     <label htmlFor="qCarga" className="form-label">
-                                        <Tooltip  color="#012442"  title="Informe a quantidade total da carga transportada. Deve estar de acordo com a unidade (ex: KG, TON, M3). Use até 4 casas decimais.">
+                                        <Tooltip  color="var(--primary-color)"  title="Informe a quantidade total da carga transportada. Deve estar de acordo com a unidade (ex: KG, TON, M3). Use até 4 casas decimais.">
                                             Quantidade da Carga <span style={{ color: 'red' }}>*</span>
                                         </Tooltip>
 

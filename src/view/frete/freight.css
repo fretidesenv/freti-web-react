@@ -6,15 +6,15 @@
 }
 
 .btn-cadastrar{
-    background-color: rgb(255, 49, 0);
+    background-color: var(--terciary-color);
     color: #f2f2f2;
 
 }
 
 .btn-cadastrar:hover{
     background-color: #f2f2f2 !important;
-    color: rgb(255, 49, 0) !important;
-    border-color: rgb(255, 49, 0) !important;
+    color: var(--terciary-color) !important;
+    border-color: var(--terciary-color) !important;
 }
 
 .btn-class-cadastrar{
@@ -42,7 +42,7 @@
     width: 30%;
     margin-right: 35%;
     margin-left: 35%;
-    background-color: rgb(255, 49, 0);
+    background-color: var(--terciary-color);
     color: #f2f2f2;
     border: none;
     border-radius: .25rem;
@@ -56,8 +56,8 @@
 }
 .OK:hover {
     background-color: #f2f2f2 !important;
-    color: rgb(255, 49, 0) !important;
-    border-color: rgb(255, 49, 0) !important;
+    color: var(--terciary-color) !important;
+    border-color: var(--terciary-color) !important;
 }
 
 .list-container {

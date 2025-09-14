@@ -31,7 +31,7 @@ const DriverBadge = ({ recordId }) => {
       
       const freightDoc = await db.collection('freight').doc(recordId).get();
       if (freightDoc.exists) {
-        setStatus(freightDoc.data().status.describe);
+        setStatus(freightDoc?.data()?.status?.describe);
       }
       
       const listDriverInFila = [];
@@ -594,16 +594,16 @@ const DataFreteTable = ({ data }) => {
       align: 'center',
       ...getColumnSearchProps(['status', 'describe']),
       render: (status) => {
-        const describeText = status.describe === 'Pendente de contratação' ? 'P.Contratação' : status.describe;
+        const describeText = status?.describe === 'Pendente de contratação' ? 'P.Contratação' : status?.describe;
         return (
-          <Tooltip title={status.describe}>
+          <Tooltip title={status?.describe}>
             <div>
               {renderStatusColor(describeText)}
             </div>
           </Tooltip>
         );
       },
-      sorter: (a, b) => a.status.describe.localeCompare(b.status.describe),
+      sorter: (a, b) => a?.status?.describe?.localeCompare(b?.status?.describe),
     },
     {
       title: 'Ações',
@@ -687,8 +687,8 @@ const DataFreteTable = ({ data }) => {
   const sortedData = datas.sort((a, b) => {
     // console.log("A ia não quer trabalhar");
     // console.log(datas);
-    const priorityA = statusPriority[a.status?.describe] || 5;
-    const priorityB = statusPriority[b.status?.describe] || 5;
+    const priorityA = statusPriority[a?.status?.describe] || 5;
+    const priorityB = statusPriority[b?.status?.describe] || 5;
     return priorityA - priorityB;
   });
 

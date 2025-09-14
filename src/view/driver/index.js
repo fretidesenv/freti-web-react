@@ -2920,7 +2920,7 @@ function Driver(){
                                         <div style={{ marginTop: "5px" }} className="col-2">
                                             <span 
                                                 style={{
-                                                    color: "#007bff",
+                                                    color: "var(--secondary-color)",
                                                     cursor: "pointer",
                                                     fontSize: "14px",
                                                     fontWeight: "normal",
@@ -3030,7 +3030,7 @@ function Driver(){
                                     <div style={{ marginTop: "5px" }} className="col-2">
                                         <span 
                                             style={{
-                                                color: "#007bff",
+                                                color: "var(--secondary-color)",
                                                 cursor: "pointer",
                                                 fontSize: "14px",
                                                 fontWeight: "normal",

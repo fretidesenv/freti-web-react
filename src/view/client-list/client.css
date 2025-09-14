@@ -1,5 +1,9 @@
+#ButtonHover {
+    background-color: var(--terciary-color) !important;
+}
+
 #ButtonHover:hover {
     background-color: #f2f2f2 !important;
-    color: rgb(255, 49, 0) !important;
-    border-color: rgb(255, 49, 0) !important;
+    color: var(--terciary-color) !important;
+    border-color: var(--terciary-color) !important;
 }

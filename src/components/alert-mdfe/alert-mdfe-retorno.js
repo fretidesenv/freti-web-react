@@ -131,7 +131,7 @@ export default function RetornoMdfeModal({ open, setOpen, mensagem, title, statu
                         onClick={() => setOpen(false)}
                         variant="contained"
                         color="inherit"
-                        sx={{ borderRadius: "8px", px: 3, backgroundColor: "#012442", color: "white" }}
+                        sx={{ borderRadius: "8px", px: 3, backgroundColor: "var(--primary-color)", color: "white" }}
                     >
                     Fechar
                     </Button>

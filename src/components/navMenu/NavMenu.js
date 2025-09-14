@@ -30,7 +30,7 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import LocalAtmOutlinedIcon from '@mui/icons-material/LocalAtmOutlined';
-import logoImage from "../../image/logo.jpeg";
+import logoImage from "../../image/logo.png";
 import TableViewOutlinedIcon from '@mui/icons-material/TableViewOutlined';
 import packageJson from "../../../package.json";
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
@@ -207,12 +207,9 @@ export default function MiniDrawer({ divOpen }) {
   const fetchLogo = async () => {
     try {
 
-      console.log("[useEffect] Buscando logo...");
       // console.log(data.dataPersonal.nameFantasy);
-      console.log(data)
       // const storageRef = ref(storage, `files/logo/${data.dataPersonal.nameFantasy}`);
       // const photoURL = await getDownloadURL(storageRef);
-      console.log("[useEffect] Logo encontrado:", data.logo);
       if (data.logo) {
         localStorage.setItem("shipperLogo", JSON.stringify(data.logo));
         setLogo(data.logo);
@@ -250,7 +247,7 @@ export default function MiniDrawer({ divOpen }) {
             <AppBar
               position="fixed"
               open={open}
-              style={{ background: "#012442" }}
+              style={{ background: "var(--primary-color)" }}
             >
               <Toolbar>
                 <IconButton
@@ -281,7 +278,7 @@ export default function MiniDrawer({ divOpen }) {
               </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
-              <DrawerHeader style={{ background: "#012442" }}>
+              <DrawerHeader style={{ background: "var(--primary-color)" }}>
                 <img
                   src={logo}
                   alt="Logo"

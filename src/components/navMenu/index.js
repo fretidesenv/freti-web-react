@@ -123,7 +123,7 @@ export default function MiniDrawer({divOpen}) {
         <>
             <Box sx={{ display: 'flex'}}>
               <CssBaseline />
-              <AppBar position="fixed" open={open} style={{ background: "#012442"}}>
+              <AppBar position="fixed" open={open} style={{ background: "var(--primary-color)"}}>
                     <Toolbar>
                         <IconButton
                             color="inherit"
@@ -157,7 +157,7 @@ export default function MiniDrawer({divOpen}) {
               </AppBar>
               <Drawer variant="permanent" open={open} >
                 
-                <DrawerHeader style={{ background: "#012442"}}>
+                <DrawerHeader style={{ background: "#001b23"}}>
                   <img src={logoImage} alt="Logo" style={{height: 'auto'}} width={'160px'} />
                 </DrawerHeader>
                 <Divider />

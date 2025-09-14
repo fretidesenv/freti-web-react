@@ -33,7 +33,7 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import LocalAtmOutlinedIcon from '@mui/icons-material/LocalAtmOutlined';
-import logoImage from "../../image/logo.jpeg";
+import logoImage from "../../image/logo.png";
 import packageJson from "../../../package.json";
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import TableRowsOutlinedIcon from '@mui/icons-material/TableRowsOutlined';
@@ -305,7 +305,7 @@ export default function NewMiniDrawer({ divOpen }) {
             <AppBar
               position="fixed"
               open={open}
-              style={{ background: "#012442" }}
+              style={{ background: "var(--primary-color)" }}
             >
               <Toolbar>
                 <IconButton
@@ -336,16 +336,14 @@ export default function NewMiniDrawer({ divOpen }) {
               </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
-              <DrawerHeader style={{ background: "#012442", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <DrawerHeader style={{ background: "var(--primary-color)", display: "flex", alignItems: "center", justifyContent: "space-between", height: "60px" }}>
                   <img
                     src={logo}
                     alt="Logo"
                     style={{
-                      display: "block",
-                      maxWidth: "100%",
-                      maxHeight: "50px",
-                      width: "auto",
-                      height: "auto",
+                      height: "250%",       // ocupa a altura do container
+                      width: "auto",        // mantém a proporção
+                      objectFit: "contain", // garante que não corte
                     }}
                   />
                   <IconButton onClick={handleDrawerClose}>
@@ -369,7 +367,7 @@ export default function NewMiniDrawer({ divOpen }) {
                         minHeight: 48,
                         justifyContent: open ? "initial" : "center",
                         px: 2.5,
-                        borderLeft: activeItem === "Dashboard" ? "4px solid #1976d2" : "4px solid transparent",
+                        borderLeft: activeItem === "Dashboard" ? "4px solid var(--secondary-color)" : "4px solid transparent",
                         backgroundColor:
                             activeItem === "Dashboard" ? "rgba(25, 118, 210, 0.1)" : "transparent",
                         transition: "all 0.3s ease",
@@ -382,7 +380,7 @@ export default function NewMiniDrawer({ divOpen }) {
                         sx={{
                             minWidth: 0,
                             mr: open ? 2 : "auto",
-                            color: activeItem === "Dashboard" ? "#012442" : "#a0a0a0",
+                            color: activeItem === "Dashboard" ? "var(--primary-color)" : "#a0a0a0",
                             transition: "color 0.3s ease",
                             justifyContent: "center",
                         }}
@@ -393,7 +391,7 @@ export default function NewMiniDrawer({ divOpen }) {
                         primary="Dashboard"
                         primaryTypographyProps={{
                             fontWeight: activeItem === "Dashboard" ? "bold" : "medium",
-                            color: activeItem === "Dashboard" ? "#012442" : "#a0a0a0",
+                            color: activeItem === "Dashboard" ? "var(--primary-color)" : "#a0a0a0",
                         }}
                         sx={{
                             opacity: open ? 1 : 0,
@@ -431,7 +429,7 @@ export default function NewMiniDrawer({ divOpen }) {
                               minHeight: 48,
                               justifyContent: open ? "initial" : "center",
                               px: 2.5,
-                              borderLeft: activeItem === "Cliente" ? "4px solid #1976d2" : "4px solid transparent",
+                              borderLeft: activeItem === "Cliente" ? "4px solid var(--secondary-color)" : "4px solid transparent",
                               backgroundColor:
                                 activeItem === "Cliente" ? "rgba(25, 118, 210, 0.1)" : "transparent",
                               transition: "all 0.3s ease",
@@ -444,7 +442,7 @@ export default function NewMiniDrawer({ divOpen }) {
                               sx={{
                                 minWidth: 0,
                                 mr: open ? 2 : "auto",
-                                color: activeItem === "Cliente" ? "#012442" : "#a0a0a0",
+                                color: activeItem === "Cliente" ? "var(--primary-color)" : "#a0a0a0",
                                 transition: "color 0.3s ease",
                                 justifyContent: "center",
                               }}
@@ -455,7 +453,7 @@ export default function NewMiniDrawer({ divOpen }) {
                               primary="Cliente"
                               primaryTypographyProps={{
                                 fontWeight: activeItem === "Cliente" ? "bold" : "medium",
-                                color: activeItem === "Cliente" ? "#012442" : "#a0a0a0",
+                                color: activeItem === "Cliente" ? "var(--primary-color)" : "#a0a0a0",
                               }}
                               sx={{
                                 opacity: open ? 1 : 0,
@@ -482,7 +480,7 @@ export default function NewMiniDrawer({ divOpen }) {
                               minHeight: 48,
                               justifyContent: open ? "initial" : "center",
                               px: 2.5,
-                              borderLeft: activeItem === "Embarcador" ? "4px solid #1976d2" : "4px solid transparent",
+                              borderLeft: activeItem === "Embarcador" ? "4px solid var(--secondary-color)" : "4px solid transparent",
                               backgroundColor:
                                 activeItem === "Embarcador" ? "rgba(25, 118, 210, 0.1)" : "transparent",
                               transition: "all 0.3s ease",
@@ -495,7 +493,7 @@ export default function NewMiniDrawer({ divOpen }) {
                               sx={{
                                 minWidth: 0,
                                 mr: open ? 2 : "auto",
-                                color: activeItem === "Embarcador" ? "#012442" : "#a0a0a0",
+                                color: activeItem === "Embarcador" ? "var(--primary-color)" : "#a0a0a0",
                                 transition: "color 0.3s ease",
                                 justifyContent: "center",
                               }}
@@ -506,7 +504,7 @@ export default function NewMiniDrawer({ divOpen }) {
                               primary="Embarcador"
                               primaryTypographyProps={{
                                 fontWeight: activeItem === "Embarcador" ? "bold" : "medium",
-                                color: activeItem === "Embarcador" ? "#012442" : "#a0a0a0",
+                                color: activeItem === "Embarcador" ? "var(--primary-color)" : "#a0a0a0",
                               }}
                               sx={{
                                 opacity: open ? 1 : 0,
@@ -533,7 +531,7 @@ export default function NewMiniDrawer({ divOpen }) {
                               minHeight: 48,
                               justifyContent: open ? "initial" : "center",
                               px: 2.5,
-                              borderLeft: activeItem === "Motorista" ? "4px solid #1976d2" : "4px solid transparent",
+                              borderLeft: activeItem === "Motorista" ? "4px solid var(--secondary-color)" : "4px solid transparent",
                               backgroundColor:
                                 activeItem === "Motorista" ? "rgba(25, 118, 210, 0.1)" : "transparent",
                               transition: "all 0.3s ease",
@@ -546,7 +544,7 @@ export default function NewMiniDrawer({ divOpen }) {
                               sx={{
                                 minWidth: 0,
                                 mr: open ? 2 : "auto",
-                                color: activeItem === "Motorista" ? "#012442" : "#a0a0a0",
+                                color: activeItem === "Motorista" ? "var(--primary-color)" : "#a0a0a0",
                                 transition: "color 0.3s ease",
                                 justifyContent: "center",
                               }}
@@ -557,7 +555,7 @@ export default function NewMiniDrawer({ divOpen }) {
                               primary="Motorista"
                               primaryTypographyProps={{
                                 fontWeight: activeItem === "Motorista" ? "bold" : "medium",
-                                color: activeItem === "Motorista" ? "#012442" : "#a0a0a0",
+                                color: activeItem === "Motorista" ? "var(--primary-color)" : "#a0a0a0",
                               }}
                               sx={{
                                 opacity: open ? 1 : 0,
@@ -584,7 +582,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                   minHeight: 48,
                                   justifyContent: open ? "initial" : "center",
                                   px: 2.5,
-                                  borderLeft: activeItem === "Usuario" ? "4px solid #1976d2" : "4px solid transparent",
+                                  borderLeft: activeItem === "Usuario" ? "4px solid var(--secondary-color)" : "4px solid transparent",
                                   backgroundColor:
                                     activeItem === "Usuario" ? "rgba(25, 118, 210, 0.1)" : "transparent",
                                   transition: "all 0.3s ease",
@@ -597,7 +595,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                   sx={{
                                     minWidth: 0,
                                     mr: open ? 2 : "auto",
-                                    color: activeItem === "Usuario" ? "#012442" : "#a0a0a0",
+                                    color: activeItem === "Usuario" ? "var(--primary-color)" : "#a0a0a0",
                                     transition: "color 0.3s ease",
                                     justifyContent: "center",
                                   }}
@@ -608,7 +606,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                   primary="Usuario"
                                   primaryTypographyProps={{
                                     fontWeight: activeItem === "Usuario" ? "bold" : "medium",
-                                    color: activeItem === "Usuario" ? "#012442" : "#a0a0a0",
+                                    color: activeItem === "Usuario" ? "var(--primary-color)" : "#a0a0a0",
                                   }}
                                   sx={{
                                     opacity: open ? 1 : 0,
@@ -641,7 +639,7 @@ export default function NewMiniDrawer({ divOpen }) {
                       minHeight: 48,
                       justifyContent: open ? "initial" : "center",
                       px: 2.5,
-                      borderLeft: activeItem === "Frete" ? "4px solid #1976d2" : "4px solid transparent",
+                      borderLeft: activeItem === "Frete" ? "4px solid var(--secondary-color)" : "4px solid transparent",
                       backgroundColor:
                         activeItem === "Frete" ? "rgba(25, 118, 210, 0.1)" : "transparent",
                       transition: "all 0.3s ease",
@@ -654,7 +652,7 @@ export default function NewMiniDrawer({ divOpen }) {
                       sx={{
                         minWidth: 0,
                         mr: open ? 2 : "auto",
-                        color: activeItem === "Frete" ? "#012442" : "#a0a0a0",
+                        color: activeItem === "Frete" ? "var(--primary-color)" : "#a0a0a0",
                         transition: "color 0.3s ease",
                         justifyContent: "center",
                       }}
@@ -665,7 +663,7 @@ export default function NewMiniDrawer({ divOpen }) {
                       primary="Frete"
                       primaryTypographyProps={{
                         fontWeight: activeItem === "Frete" ? "bold" : "medium",
-                        color: activeItem === "Frete" ? "#012442" : "#a0a0a0",
+                        color: activeItem === "Frete" ? "var(--primary-color)" : "#a0a0a0",
                       }}
                       sx={{
                         opacity: open ? 1 : 0,
@@ -708,7 +706,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 px: 2.5,
                                 borderLeft:
                                   activeItem === "mdfe"
-                                    ? "4px solid #1976d2"
+                                    ? "4px solid var(--secondary-color)"
                                     : "4px solid transparent",
                                 backgroundColor:
                                   activeItem === "mdfe"
@@ -724,7 +722,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 sx={{
                                   minWidth: 0,
                                   mr: open ? 2 : "auto",
-                                  color: activeItem === "mdfe" ? "#012442" : "#a0a0a0",
+                                  color: activeItem === "mdfe" ? "var(--primary-color)" : "#a0a0a0",
                                   transition: "color 0.3s ease",
                                   justifyContent: "center",
                                 }}
@@ -736,7 +734,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 primary="MDFe"
                                 primaryTypographyProps={{
                                   fontWeight: activeItem === "mdfe" ? "bold" : "medium",
-                                  color: activeItem === "mdfe" ? "#012442" : "#a0a0a0",
+                                  color: activeItem === "mdfe" ? "var(--primary-color)" : "#a0a0a0",
                                 }}
                                 sx={{
                                   opacity: open ? 1 : 0,
@@ -756,7 +754,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 minHeight: 48,
                                 justifyContent: open ? "initial" : "center",
                                 px: 2.5,
-                                borderLeft: activeItem === "Importacao" ? "4px solid #1976d2" : "4px solid transparent",
+                                borderLeft: activeItem === "Importacao" ? "4px solid var(--secondary-color)" : "4px solid transparent",
                                 backgroundColor:
                                   activeItem === "Importacao" ? "rgba(25, 118, 210, 0.1)" : "transparent",
                                 transition: "all 0.3s ease",
@@ -769,7 +767,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 sx={{
                                   minWidth: 0,
                                   mr: open ? 2 : "auto",
-                                  color: activeItem === "Importacao" ? "#012442" : "#a0a0a0",
+                                  color: activeItem === "Importacao" ? "var(--primary-color)" : "#a0a0a0",
                                   transition: "color 0.3s ease",
                                   justifyContent: "center",
                                 }}
@@ -780,7 +778,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 primary="Importacao"
                                 primaryTypographyProps={{
                                   fontWeight: activeItem === "Importacao" ? "bold" : "medium",
-                                  color: activeItem === "Importacao" ? "#012442" : "#a0a0a0",
+                                  color: activeItem === "Importacao" ? "var(--primary-color)" : "#a0a0a0",
                                 }}
                                 sx={{
                                   opacity: open ? 1 : 0,
@@ -825,7 +823,7 @@ export default function NewMiniDrawer({ divOpen }) {
                               px: 2.5,
                               borderLeft:
                                 activeItem === "Pagamentos"
-                                  ? "4px solid #012442"
+                                  ? "4px solid var(--primary-color)"
                                   : "4px solid transparent",
                               backgroundColor:
                                 activeItem === "Pagamentos"
@@ -842,7 +840,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 minWidth: 0,
                                 mr: open ? 2 : "auto",
                                 color:
-                                  activeItem === "Pagamentos" ? "#012442" : "#a0a0a0",
+                                  activeItem === "Pagamentos" ? "var(--primary-color)" : "#a0a0a0",
                                 transition: "color 0.3s ease",
                                 justifyContent: "center",
                               }}
@@ -856,7 +854,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 fontWeight:
                                   activeItem === "Pagamentos" ? "bold" : "medium",
                                 color:
-                                  activeItem === "Pagamentos" ? "#012442" : "#a0a0a0",
+                                  activeItem === "Pagamentos" ? "var(--primary-color)" : "#a0a0a0",
                               }}
                               sx={{
                                 opacity: open ? 1 : 0,
@@ -899,7 +897,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 minHeight: 48,
                                 justifyContent: open ? "initial" : "center",
                                 px: 2.5,
-                                borderLeft: activeItem === "Ocorrencia" ? "4px solid #1976d2" : "4px solid transparent",
+                                borderLeft: activeItem === "Ocorrencia" ? "4px solid var(--secondary-color)" : "4px solid transparent",
                                 backgroundColor:
                                   activeItem === "Ocorrencia" ? "rgba(25, 118, 210, 0.1)" : "transparent",
                                 transition: "all 0.3s ease",
@@ -914,7 +912,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 sx={{
                                   minWidth: 0,
                                   mr: open ? 2 : "auto",
-                                  color: activeItem === "Ocorrencia" ? "#012442" : "#a0a0a0",
+                                  color: activeItem === "Ocorrencia" ? "var(--primary-color)" : "#a0a0a0",
                                   transition: "color 0.3s ease",
                                   justifyContent: "center",
                                 }}
@@ -925,7 +923,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 primary="Ocorrências"
                                 primaryTypographyProps={{
                                   fontWeight: activeItem === "Ocorrencia" ? "bold" : "medium",
-                                  color: activeItem === "Ocorrencia" ? "#012442" : "#a0a0a0",
+                                  color: activeItem === "Ocorrencia" ? "var(--primary-color)" : "#a0a0a0",
                                 }}
                                 sx={{
                                   opacity: open ? 1 : 0,
@@ -946,7 +944,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 minHeight: 48,
                                 justifyContent: open ? "initial" : "center",
                                 px: 2.5,
-                                borderLeft: activeItem === "tableIcms" ? "4px solid #1976d2" : "4px solid transparent",
+                                borderLeft: activeItem === "tableIcms" ? "4px solid var(--secondary-color)" : "4px solid transparent",
                                 backgroundColor:
                                   activeItem === "tableIcms" ? "rgba(25, 118, 210, 0.1)" : "transparent",
                                 transition: "all 0.3s ease",
@@ -961,7 +959,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 sx={{
                                   minWidth: 0,
                                   mr: open ? 2 : "auto",
-                                  color: activeItem === "tableIcms" ? "#012442" : "#a0a0a0",
+                                  color: activeItem === "tableIcms" ? "var(--primary-color)" : "#a0a0a0",
                                   transition: "color 0.3s ease",
                                   justifyContent: "center",
                                 }}
@@ -972,7 +970,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 primary="Tabela ICMS"
                                 primaryTypographyProps={{
                                   fontWeight: activeItem === "tableIcms" ? "bold" : "medium",
-                                  color: activeItem === "tableIcms" ? "#012442" : "#a0a0a0",
+                                  color: activeItem === "tableIcms" ? "var(--primary-color)" : "#a0a0a0",
                                 }}
                                 sx={{
                                   opacity: open ? 1 : 0,
@@ -993,7 +991,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 minHeight: 48,
                                 justifyContent: open ? "initial" : "center",
                                 px: 2.5,
-                                borderLeft: activeItem === "priceTable" ? "4px solid #1976d2" : "4px solid transparent",
+                                borderLeft: activeItem === "priceTable" ? "4px solid var(--secondary-color)" : "4px solid transparent",
                                 backgroundColor:
                                   activeItem === "priceTable" ? "rgba(25, 118, 210, 0.1)" : "transparent",
                                 transition: "all 0.3s ease",
@@ -1008,7 +1006,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 sx={{
                                   minWidth: 0,
                                   mr: open ? 2 : "auto",
-                                  color: activeItem === "priceTable" ? "#012442" : "#a0a0a0",
+                                  color: activeItem === "priceTable" ? "var(--primary-color)" : "#a0a0a0",
                                   transition: "color 0.3s ease",
                                   justifyContent: "center",
                                 }}
@@ -1019,7 +1017,7 @@ export default function NewMiniDrawer({ divOpen }) {
                                 primary="Tabela de Preço"
                                 primaryTypographyProps={{
                                   fontWeight: activeItem === "priceTable" ? "bold" : "medium",
-                                  color: activeItem === "priceTable" ? "#012442" : "#a0a0a0",
+                                  color: activeItem === "priceTable" ? "var(--primary-color)" : "#a0a0a0",
                                 }}
                                 sx={{
                                   opacity: open ? 1 : 0,
@@ -1056,7 +1054,7 @@ export default function NewMiniDrawer({ divOpen }) {
                       minHeight: 48,
                       justifyContent: open ? "initial" : "center",
                       px: 2.5,
-                      borderLeft: activeItem === "Acomp" ? "4px solid #1976d2" : "4px solid transparent",
+                      borderLeft: activeItem === "Acomp" ? "4px solid var(--secondary-color)" : "4px solid transparent",
                       backgroundColor:
                         activeItem === "Acomp" ? "rgba(25, 118, 210, 0.1)" : "transparent",
                       transition: "all 0.3s ease",
@@ -1069,7 +1067,7 @@ export default function NewMiniDrawer({ divOpen }) {
                       sx={{
                         minWidth: 0,
                         mr: open ? 2 : "auto",
-                        color: activeItem === "Acomp" ? "#012442" : "#a0a0a0",
+                        color: activeItem === "Acomp" ? "var(--primary-color)" : "#a0a0a0",
                         transition: "color 0.3s ease",
                         justifyContent: "center",
                       }}
@@ -1080,7 +1078,7 @@ export default function NewMiniDrawer({ divOpen }) {
                       primary="Acomp. de entregas"
                       primaryTypographyProps={{
                         fontWeight: activeItem === "Acomp" ? "bold" : "medium",
-                        color: activeItem === "Acomp" ? "#012442" : "#a0a0a0",
+                        color: activeItem === "Acomp" ? "var(--primary-color)" : "#a0a0a0",
                       }}
                       sx={{
                         opacity: open ? 1 : 0,
