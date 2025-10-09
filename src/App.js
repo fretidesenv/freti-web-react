@@ -26,9 +26,10 @@ import PaymentList from "./view/payment/listPayment";
 import PriceTableList from "./view/priceTable/price-table-list";
 import PriceTableICMS from "./view/tableIcms/table-icms";
 import DashboardHome from "./view/dashboard-home/dashboard-home";
-import CadastroMdfe from "./view/manifesto/Mdfe/insert-mdfe";
 import MdfeFormTabs from "./view/manifesto/Mdfe/manifest";
 import MdfeListView from "./view/manifesto/Mdfe/list-mdf-e";
+import GroupListView from "./view/group/list-group";
+import NewGroup from "./view/group/insert-group";
 
 function App() {
   return (
@@ -87,7 +88,11 @@ function App() {
           <Route exact path="/insertMdfe" element={<MdfeFormTabs />} />
           <Route exact path="/insertMdfe/:id" element={<MdfeFormTabs  />} />
           <Route exact path="/listMdfe" element={<MdfeListView />} />
-          {/* <Route exact path="/listMdfe" element={<MdfeL÷ist />} /> */}
+
+          <Route exact path="/insertGroup/:id" element={<NewGroup  />} />
+          <Route exact path="/insertGroup" element={<NewGroup  />} />
+          <Route exact path="/listGroup" element={<GroupListView />} />
+
 
         </Routes>
       </BrowserRouter>

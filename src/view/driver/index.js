@@ -271,7 +271,7 @@ function Driver(){
                     setanttReboque(personalData?.anttReboque != undefined ? personalData?.anttReboque : "");
                 }
 
-                setFullName(personalData?.fullName);
+                setFullName(personalData?.fullName ? personalData?.fullName : name);
                 setSexGender(personalData?.sexGender);
                 setDocumentCnhExpiration(dataCnhExpired)
                 setDocumentCnh(personalData?.documentCnh);
@@ -514,13 +514,13 @@ function Driver(){
     // Validação dos campos de CPF/CNPJ, para sicronização das informações
     useEffect(() => {
 
-        const digits = cpfoucnpj.replace(/\D/g, "");
+        const digits = cpfoucnpj && cpfoucnpj.replace(/\D/g, "");
 
         // só roda se o usuário parar de digitar por 500ms
         const timeout = setTimeout(() => {
-            if (digits.length === 11) {
+            if (digits && digits.length === 11) {
             setTipoProprietario("cpf");
-            } else if (digits.length === 14) {
+            } else if (digits && digits.length === 14) {
             setTipoProprietario("cnpj");
             }
             else {

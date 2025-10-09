@@ -30,6 +30,8 @@ import paymentService from "../../service/payment.service";
 import NewMiniDrawer from "../../components/navMenu/menu-nav";
 import notification from "../../service/sendMessage";
 import mdfeService from "../../service/mdfe.service";
+import GroupService from "../../service/group.service";
+import GruposOrdenaveis from "../../components/list-drag-drop-order/list-drag-drop";
 
 require("firebase/auth");
 
@@ -72,6 +74,13 @@ function Freight() {
     const [driversInFila, setDriversInFila] = useState([]);
     const [referenc, setReferenc] = useState("");
     const [driverChose, setDriverChose] = useState("");
+
+    const [groupOrder, setGroupOrder] = useState([]);
+    
+    const [group, setGroup] = useState([{
+        name: 0,
+        description: ""
+    }]);
 
     const [msgTipo, setMsgTipo] = useState();
     const [msg, setMsg] = useState();
@@ -345,9 +354,6 @@ function Freight() {
 
 
                 if (result.exists) {
-                    // const shipperData = {
-                        // id: result.id,
-                        // ...result.data(),
 
                     setListShipper([{
                         id: result.id,
@@ -355,41 +361,11 @@ function Freight() {
                     }]);
                 };
 
-                // const listClientIn = result.docs.map((doc) => ({
-                //     id: doc.id,
-                //     ...doc.data(),
-                // }));
-
-                // setListShipper(listClientIn);
                 setCarregando(0);
             } catch (error) {
                 setCarregando(0);
                 console.error("Erro ao buscar clientes:", error);
             }
-
-
-
-            // await db
-            //     .collection("shipper")
-            //     .doc(users.uidShipper)
-            //     .get()
-            //     .then((result) => {
-            //         result.docs.forEach((doc) => {
-            //             listShipperIn.push({
-            //                 id: doc.id,
-            //                 ...doc.data(),
-            //             });
-            //         });
-
-            //         setListShipper(listShipperIn);
-            //         setCarregando(0);
-
-            //         console.log("Embarcador carregado:", listShipperIn.length);
-            //     })
-            //     .catch((error) => {
-            //         setCarregando(0);
-            //         console.log(error);
-            //     });
 
 
         }else {
@@ -509,6 +485,15 @@ function Freight() {
             });
     }
 
+    async function loadingGroup() {
+        console.log("loadingGroup");
+
+        const dataGroup = await GroupService.getGroup(users.uidShipper);
+        console.log(dataGroup);
+        setGroup(dataGroup); 
+
+    }
+
     async function searchIdPayment(id) {
         try {
             const dataDadoPayment = await paymentService.getEspecifico(id)
@@ -602,6 +587,11 @@ function Freight() {
                 // ???
                 setTotalAmountRoute(freightTage.totalAmountRoute);
 
+                console.log("freightTage.groupOrder", freight.groupOrder);
+
+                setGroup(freight.groupOrder);
+                setGroupOrder(freight.groupOrder || []);
+
                 setCarregando(0);
             })
             .catch((error) => {
@@ -628,11 +618,13 @@ function Freight() {
 
         if (isCopyTemp === false) {
             if (idVerify) {
+                loadingGroup();
                 loadingInit(isCopyTemp);
                 loadingPoints();
                 searchIdPayment(idVerify);
             }
         } else {
+            loadingGroup();
             loadingInit(isCopyTemp);
             loadingPoints(isCopyTemp);
             setId(null);
@@ -641,6 +633,7 @@ function Freight() {
         loadingQueue();
         loadingCustomer();
         loadingShipper();
+        loadingGroup();
     }, [idVerify, isCopy]);
 
     async function save() {
@@ -760,6 +753,7 @@ function Freight() {
             createUser: usuarioEmail,
             createData: new Date(),
             history: history,
+            groupOrder,
         };
 
         // debugger;
@@ -1011,6 +1005,7 @@ function Freight() {
             createData: new Date(),
             history,
             status: chosenStatus,
+            groupOrder,
         };
 
         if (!ultimaRota.date_operation) {
@@ -1212,19 +1207,18 @@ function Freight() {
                 
             }
 
-            debugger;
-            mdfeService.createPreMdfe(id);
+            // mdfeService.createPreMdfe(id);
 
             setMsgTipo("sucesso");
             setCarregando(0);
             navigate("/freightlist");
 
-            try {
-                await paymentService.prepareEmailFreight(data, "Solicitação de Envio de Frete - Update");
-            }
-            catch (error) {
-                console.error("Erro ao preparar email:", error);
-            }
+            // try {
+            //     await paymentService.prepareEmailFreight(data, "Solicitação de Envio de Frete - Update");
+            // }
+            // catch (error) {
+            //     console.error("Erro ao preparar email:", error);
+            // }
         } catch (error) {
             console.error(error);
             setMsgTipo("erro");
@@ -2173,6 +2167,14 @@ function Freight() {
             setOpen(true);
         }
     };
+
+    
+
+    const handleSaveGroup = (resultado) => {
+        console.log("handleSaveGroup");
+        console.log(resultado);
+        setGroupOrder(resultado);
+    }
 
     const varifyHavingDriver = () => {
         if (!uidDriver) {
@@ -3723,261 +3725,283 @@ function Freight() {
                                             <h4 className="mb-3">Frete</h4>
 
                                             <div className="row">
-                                                <div className="col-md-3">
-                                                    <label
-                                                        htmlFor="product"
-                                                        className="form-label"
-                                                    >
-                                                        Produto
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        onChange={(e) =>
-                                                            setProduct(
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        value={
-                                                            product && product
-                                                        }
-                                                        className="form-control"
-                                                        id="product"
-                                                    />
-                                                </div>
-                                                <div className="col-3">
-                                                    <label
-                                                        htmlFor="seller"
-                                                        className="form-label"
-                                                    >
-                                                        Vendedor
-                                                    </label>
-                                                    <input
-                                                        type="text"
-                                                        onChange={(e) =>
-                                                            setSeller(
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        value={seller && seller}
-                                                        disabled={
-                                                            seller && seller
-                                                        }
-                                                        className="form-control"
-                                                        id="seller"
-                                                        placeholder=""
-                                                    />
-                                                </div>
-                                                <div className="col-2">
-                                                    <label
-                                                        htmlFor="nameDriver"
-                                                        className="form-label"
-                                                    >
-                                                        Motorista
-                                                    </label>
-                                                    <Autocomplete
-                                                        id="chose-1"
-                                                        size="small"
-                                                        value={driverChose === "" ? "" : driverChose}
-                                                        getOptionLabel={(
-                                                            option
-                                                        ) => option.name || ""}
-                                                        options={[
-                                                            {
-                                                                name: "Não aplicar motorista",
-                                                                cpf: "",
-                                                                value: "",
-                                                                id: "",
-                                                                uid: "",
-                                                            },
-                                                            ...driversInFila,
-                                                        ]}
-                                                        isOptionEqualToValue={(
-                                                            option,
-                                                            value
-                                                        ) =>
-                                                            option.name ===
-                                                            value.name
-                                                        }
-                                                        onChange={(
-                                                            event,
-                                                            value
-                                                        ) =>
-                                                            handleDriver(value)
-                                                        }
-                                                        clearOnBlur
-                                                        noOptionsText="Nenhum Motorista com esse nome foi encontrado"
-                                                        sx={{ width: "100%" }}
-                                                        renderInput={(
-                                                            params
-                                                        ) => (
-                                                            <TextField
-                                                                {...params}
-                                                                label=""
-                                                            />
-                                                        )}
-                                                        renderOption={(
-                                                            props,
-                                                            option
-                                                        ) => (
-                                                            <li
-                                                                {...props}
-                                                                key={
-                                                                    option.id ||
-                                                                    "default"
-                                                                }
+                                                {/* Coluna da esquerda - Campos do frete */}
+                                                <div className="col-md-8">
+                                                    <div className="row">
+                                                        <div className="col-md-4">
+                                                            <label
+                                                                htmlFor="product"
+                                                                className="form-label"
                                                             >
-                                                                {option.name &&
-                                                                option.cpf
-                                                                    ? `${
-                                                                          option.name
-                                                                      } - CPF: ${formatCPF(
-                                                                          option.cpf
-                                                                      )}`
-                                                                    : option.name}
-                                                            </li>
-                                                        )}
-                                                        filterOptions={(
-                                                            options,
-                                                            { inputValue }
-                                                        ) => {
-                                                            const normalizedInput =
-                                                                inputValue.trim();
-                                                            const normalizedCPFInput =
-                                                                normalizedInput.replace(
-                                                                    /\D/g,
-                                                                    ""
-                                                                ); // Remove todos os caracteres não numéricos
+                                                                Produto
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                onChange={(e) =>
+                                                                    setProduct(
+                                                                        e.target.value
+                                                                    )
+                                                                }
+                                                                value={
+                                                                    product && product
+                                                                }
+                                                                className="form-control"
+                                                                id="product"
+                                                            />
+                                                        </div>
+                                                        <div className="col-4">
+                                                            <label
+                                                                htmlFor="seller"
+                                                                className="form-label"
+                                                            >
+                                                                Vendedor
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                onChange={(e) =>
+                                                                    setSeller(
+                                                                        e.target.value
+                                                                    )
+                                                                }
+                                                                value={seller && seller}
+                                                                disabled={
+                                                                    seller && seller
+                                                                }
+                                                                className="form-control"
+                                                                id="seller"
+                                                                placeholder=""
+                                                            />
+                                                        </div>
+                                                    </div>
 
-                                                            // Verifica se o inputValue é um número
-                                                            const isNumber =
-                                                                normalizedCPFInput !==
-                                                                    "" &&
-                                                                !isNaN(
-                                                                    normalizedCPFInput
-                                                                );
+                                                    <div className="row mt-3">
+                                                        <div className="col-4">
+                                                            <label
+                                                                htmlFor="nameDriver"
+                                                                className="form-label"
+                                                            >
+                                                                Motorista
+                                                            </label>
+                                                            <Autocomplete
+                                                                id="chose-1"
+                                                                size="small"
+                                                                value={driverChose === "" ? "" : driverChose}
+                                                                getOptionLabel={(
+                                                                    option
+                                                                ) => option.name || ""}
+                                                                options={[
+                                                                    {
+                                                                        name: "Não aplicar motorista",
+                                                                        cpf: "",
+                                                                        value: "",
+                                                                        id: "",
+                                                                        uid: "",
+                                                                    },
+                                                                    ...driversInFila,
+                                                                ]}
+                                                                isOptionEqualToValue={(
+                                                                    option,
+                                                                    value
+                                                                ) =>
+                                                                    option.name ===
+                                                                    value.name
+                                                                }
+                                                                onChange={(
+                                                                    event,
+                                                                    value
+                                                                ) =>
+                                                                    handleDriver(value)
+                                                                }
+                                                                clearOnBlur
+                                                                noOptionsText="Nenhum Motorista com esse nome foi encontrado"
+                                                                sx={{ width: "100%" }}
+                                                                renderInput={(
+                                                                    params
+                                                                ) => (
+                                                                    <TextField
+                                                                        {...params}
+                                                                        label=""
+                                                                    />
+                                                                )}
+                                                                renderOption={(
+                                                                    props,
+                                                                    option
+                                                                ) => (
+                                                                    <li
+                                                                        {...props}
+                                                                        key={
+                                                                            option.id ||
+                                                                            "default"
+                                                                        }
+                                                                    >
+                                                                        {option.name &&
+                                                                        option.cpf
+                                                                            ? `${
+                                                                                  option.name
+                                                                              } - CPF: ${formatCPF(
+                                                                                  option.cpf
+                                                                              )}`
+                                                                            : option.name}
+                                                                    </li>
+                                                                )}
+                                                                filterOptions={(
+                                                                    options,
+                                                                    { inputValue }
+                                                                ) => {
+                                                                    const normalizedInput =
+                                                                        inputValue.trim();
+                                                                    const normalizedCPFInput =
+                                                                        normalizedInput.replace(
+                                                                            /\D/g,
+                                                                            ""
+                                                                        ); // Remove todos os caracteres não numéricos
 
-                                                            return options.filter(
-                                                                (option) => {
-                                                                    if (
-                                                                        isNumber
-                                                                    ) {
-                                                                        // Se for um número, faça algo específico
-                                                                        return option.cpf.includes(
+                                                                    // Verifica se o inputValue é um número
+                                                                    const isNumber =
+                                                                        normalizedCPFInput !==
+                                                                            "" &&
+                                                                        !isNaN(
                                                                             normalizedCPFInput
                                                                         );
-                                                                    } else {
-                                                                        // Se não for um número, faça a verificação normal
-                                                                        const nameMatch =
-                                                                            option.name
-                                                                                ?.toLowerCase()
-                                                                                .includes(
-                                                                                    normalizedInput.toLowerCase()
+
+                                                                    return options.filter(
+                                                                        (option) => {
+                                                                            if (
+                                                                                isNumber
+                                                                            ) {
+                                                                                // Se for um número, faça algo específico
+                                                                                return option.cpf.includes(
+                                                                                    normalizedCPFInput
                                                                                 );
-                                                                        return nameMatch;
-                                                                    }
+                                                                            } else {
+                                                                                // Se não for um número, faça a verificação normal
+                                                                                const nameMatch =
+                                                                                    option.name
+                                                                                        ?.toLowerCase()
+                                                                                        .includes(
+                                                                                            normalizedInput.toLowerCase()
+                                                                                        );
+                                                                                return nameMatch;
+                                                                            }
+                                                                        }
+                                                                    );
+                                                                }}
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-4">
+                                                            <label
+                                                                htmlFor="phoneRespContractFreigtage"
+                                                                className="form-label"
+                                                            >
+                                                                Resp. contratação frete
+                                                            </label>
+                                                            <InputMask
+                                                                mask="(99) 99999-9999"
+                                                                className="form-control"
+                                                                onChange={(e) =>
+                                                                    setPhoneRespContractFreigtage(
+                                                                        e.target.value
+                                                                    )
                                                                 }
-                                                            );
-                                                        }}
-                                                    />
-                                                </div>
-                                                <div className="col-2">
-                                                    <label
-                                                        htmlFor="phoneRespContractFreigtage"
-                                                        className="form-label"
-                                                    >
-                                                        Resp. contratação frete
-                                                    </label>
-                                                    <InputMask
-                                                        mask="(99) 99999-9999"
-                                                        className="form-control"
-                                                        onChange={(e) =>
-                                                            setPhoneRespContractFreigtage(
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                        value={
-                                                            phoneRespContractFreigtage &&
-                                                            phoneRespContractFreigtage
-                                                        }
-                                                        placeholder="(99) 99999-9999"
-                                                    />
+                                                                value={
+                                                                    phoneRespContractFreigtage &&
+                                                                    phoneRespContractFreigtage
+                                                                }
+                                                                placeholder="(99) 99999-9999"
+                                                            />
+                                                        </div>
+                                                    </div>
 
-                                                    {/* <input type="text" onChange={(e)=> setResponsibleContractFreigtage(e.target.value)} value={phoneRespContractFreigtage && phoneRespContractFreigtage} className="form-control" id="respContFreight" placeholder=""/> */}
-                                                </div>
-                                            </div>
+                                                    <div className="row mt-3">
+                                                        <div className="col-4">
+                                                            <label
+                                                                htmlFor="weightCargo"
+                                                                className="form-label"
+                                                            >
+                                                                Peso da Carga (Kg)
+                                                            </label>
+                                                            <IntlCurrencyInput
+                                                                currency="BRL"
+                                                                config={
+                                                                    currencyConfigKm
+                                                                }
+                                                                placeholder="00.00"
+                                                                onChange={
+                                                                    handleChangeWeightCargo
+                                                                }
+                                                                value={
+                                                                    weightCargo &&
+                                                                    weightCargo
+                                                                }
+                                                                className="form-control"
+                                                                id="weightCargo"
+                                                            />
+                                                        </div>
 
-                                            <div className="row">
-                                                <div className="col-md-2">
-                                                    <label
-                                                        htmlFor="weightCargo"
-                                                        className="form-label"
-                                                    >
-                                                        Peso da Carga (Kg)
-                                                    </label>
-                                                    <IntlCurrencyInput
-                                                        currency="BRL"
-                                                        config={
-                                                            currencyConfigKm
-                                                        }
-                                                        placeholder="00.00"
-                                                        onChange={
-                                                            handleChangeWeightCargo
-                                                        }
-                                                        value={
-                                                            weightCargo &&
-                                                            weightCargo
-                                                        }
-                                                        className="form-control"
-                                                        id="weightCargo"
-                                                    />
-                                                    {/* <input type="text" onChange={(e)=> setWeightCargo(e.target.value)} value={weightCargo && weightCargo} className="form-control" id="weightCargo"/> */}
+                                                        <div className="col-4">
+                                                            <label
+                                                                htmlFor="valueNF"
+                                                                className="form-label"
+                                                            >
+                                                                Valor NF
+                                                            </label>
+                                                            <IntlCurrencyInput
+                                                                currency="BRL"
+                                                                config={currencyConfig}
+                                                                placeholder="00.00"
+                                                                onChange={
+                                                                    handleChangeValueNF
+                                                                }
+                                                                value={
+                                                                    valueNF && valueNF
+                                                                }
+                                                                className="form-control"
+                                                                id="valueNF"
+                                                            />
+                                                        </div>
+
+                                                        <div className="col-4">
+                                                            <label
+                                                                htmlFor="valueFreightage"
+                                                                className="form-label"
+                                                            >
+                                                                Valor do Frete
+                                                            </label>
+                                                            <IntlCurrencyInput
+                                                                currency="BRL"
+                                                                config={currencyConfig}
+                                                                placeholder="00.00"
+                                                                onChange={
+                                                                    handleChangeValueFreightage
+                                                                }
+                                                                value={
+                                                                    valueFreightage &&
+                                                                    valueFreightage
+                                                                }
+                                                                className="form-control"
+                                                                id="valueFreightage"
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
 
-                                                <div className="col-2">
-                                                    <label
-                                                        htmlFor="valueNF"
-                                                        className="form-label"
-                                                    >
-                                                        Valor NF
-                                                    </label>
-                                                    <IntlCurrencyInput
-                                                        currency="BRL"
-                                                        config={currencyConfig}
-                                                        placeholder="00.00"
-                                                        onChange={
-                                                            handleChangeValueNF
-                                                        }
-                                                        value={
-                                                            valueNF && valueNF
-                                                        }
-                                                        className="form-control"
-                                                        id="valueNF"
-                                                    />
-                                                    {/* <input type="number" onChange={(e)=> setValueNF(e.target.value)} value={valueNF && valueNF} className="form-control" id="valueNF" placeholder=""/> */}
-                                                </div>
-
-                                                <div className="col-2">
-                                                    <label
-                                                        htmlFor="valueFreightage"
-                                                        className="form-label"
-                                                    >
-                                                        Valor do Frete
-                                                    </label>
-                                                    <IntlCurrencyInput
-                                                        currency="BRL"
-                                                        config={currencyConfig}
-                                                        placeholder="00.00"
-                                                        onChange={
-                                                            handleChangeValueFreightage
-                                                        }
-                                                        value={
-                                                            valueFreightage &&
-                                                            valueFreightage
-                                                        }
-                                                        className="form-control"
-                                                        id="valueFreightage"
-                                                    />
-                                                    {/* <input type="number" onChange={(e)=> setValueFreightage(e.target.value)} value={valueFreightage && valueFreightage} className="form-control" id="valueFreightage" placeholder=""/> */}
+                                                {/* Coluna da direita - Grupo */}
+                                                <div className="col-md-4">
+                                                    <div className="d-flex flex-column h-100">
+                                                        <label
+                                                            htmlFor="group"
+                                                            className="form-label"
+                                                        >
+                                                            Grupo
+                                                        </label>
+                                                        <div className="flex-grow-1">
+                                                            <GruposOrdenaveis 
+                                                                onSave={handleSaveGroup} 
+                                                                initialGroups={groupOrder && groupOrder.length > 0 ? groupOrder : group && group.length > 0 ? group : []}
+                                                            />
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </Card>

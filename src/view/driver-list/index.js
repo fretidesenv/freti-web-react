@@ -21,7 +21,6 @@ function DriverList(){
         
         firebase.firestore()
             .collection('drivers_users')
-            .where("uidShipper", "==", user.uidShipper)
             .get().then( async (result) => {
 
                 result.docs.forEach(doc => {

@@ -44,6 +44,7 @@ import AddToQueueRoundedIcon from '@mui/icons-material/AddToQueueRounded';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { GroupOutlined } from "@mui/icons-material";
 
 const drawerWidth = 240;
 
@@ -887,7 +888,7 @@ export default function NewMiniDrawer({ divOpen }) {
 
                     <Collapse in={openParamSubMenu} timeout="auto" unmountOnExit >
                       <List component="div" disablePadding>
-                        <ListItem key="Ocorrências" disablePadding sx={{ display: "block" }}>
+                        {/* <ListItem key="Ocorrências" disablePadding sx={{ display: "block" }}>
                           <Link
                             to="/listOcurrence"
                             style={{ textDecoration: "none", color: "inherit" }}
@@ -1026,7 +1027,53 @@ export default function NewMiniDrawer({ divOpen }) {
                               />
                             </ListItemButton>
                           </Link>
-                        </ListItem>
+                        </ListItem> */}
+                        <ListItem key="Grupo" disablePadding sx={{ display: "block" }}>
+                              <Link
+                                to="/listGroup"
+                                style={{ textDecoration: "none", color: "inherit" }}
+                              >
+                                <ListItemButton
+                                  sx={{
+                                    minHeight: 48,
+                                    justifyContent: open ? "initial" : "center",
+                                    px: 2.5,
+                                    borderLeft: activeItem === "groupTable" ? "4px solid var(--secondary-color)" : "4px solid transparent",
+                                    backgroundColor:
+                                      activeItem === "groupTable" ? "rgba(25, 118, 210, 0.1)" : "transparent",
+                                    transition: "all 0.3s ease",
+                                    '&:hover': {
+                                      backgroundColor: "rgba(25, 118, 210, 0.15)",
+                                    },
+                                  }}
+                                >
+
+                                
+                                  <ListItemIcon
+                                      sx={{
+                                        minWidth: 0,
+                                        mr: open ? 2 : "auto",
+                                        color: activeItem === "groupTable" ? "var(--primary-color)" : "#a0a0a0",
+                                        transition: "color 0.3s ease",
+                                        justifyContent: "center",
+                                      }}
+                                    >
+                                    <GroupOutlined />
+                                  </ListItemIcon>
+                                  <ListItemText
+                                    primary="Grupo"
+                                    primaryTypographyProps={{
+                                      fontWeight: activeItem === "groupTable" ? "bold" : "medium",
+                                      color: activeItem === "groupTable" ? "var(--primary-color)" : "#a0a0a0",
+                                    }}
+                                    sx={{
+                                      opacity: open ? 1 : 0,
+                                      transition: "opacity 0.3s ease",
+                                    }}
+                                  />
+                                </ListItemButton>
+                              </Link>
+                            </ListItem>
                       </List>
                     </Collapse>
                   </ListItem>

@@ -1,6 +1,6 @@
 {
     "name": "app-web-fortio",
-    "version": "1.0.33",
+    "version": "1.0.0",
     "homepage": "/",
     "private": true,
     "engines": {
@@ -13,6 +13,7 @@
         "@emotion/react": "^11.10.5",
         "@emotion/styled": "^11.10.5",
         "@googlemaps/react-wrapper": "^1.1.35",
+        "@hello-pangea/dnd": "^18.0.1",
         "@mapbox/mapbox-gl-directions": "^4.3.1",
         "@mapbox/polyline": "^1.2.1",
         "@mui/icons-material": "^5.8.4",
