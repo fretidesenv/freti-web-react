@@ -16,6 +16,7 @@ import { Card as Cards } from "@mui/material";
 import NewMiniDrawer from "../../components/navMenu/menu-nav";
 import Utils from "../../util/utils";
 import paymentService from "../../service/payment.service";
+import GroupService from "../../service/group.service";
 
 const { Header, Content, Footer } = Layout;
 const { TabPane } = Tabs;
@@ -141,6 +142,8 @@ function Driver(){
     const [contactsProfessional, setContactsProfessional] = useState([createContactProfessional()]);
 
     const [disabledList, setDisabledList] = useState(false);
+    const [group, setGroup] = useState([]);
+    const [selectedGroup, setSelectedGroup] = useState("");
 
     // const [errorFirebase, setErrorFirebase] = useState(false);
 
@@ -208,6 +211,8 @@ function Driver(){
             console.error("Erro ao buscar drivers:", error);
         });
 
+        loadingGroup();
+
         if(id){
 
             db.collection('drivers_users').doc(id).get().then(result => {
@@ -217,6 +222,7 @@ function Driver(){
                     setEmail(driver?.email)
                     setProfilePicture(driver?.profilePicture)
                     setCpf(driver?.cpf)
+                    setSelectedGroup(driver?.groupId || "")
                     
                     setName(driver?.name)
             });
@@ -560,10 +566,6 @@ function Driver(){
         });
     }, [reboques.map(r => r.cpfoucnpjReboque).join(",")]);
 
-    // useEffect(() => {
-    //     if (errorFirebase) {
-    //     }
-    // }, [errorFirebase]);
 
     function createReboque() {
         return {
@@ -1073,7 +1075,8 @@ function Driver(){
                     accountCreated: new Date(),
                     history: history,
                     idNotification: '',
-                    uidShipper: users.uidShipper
+                    uidShipper: users.uidShipper,
+                    groupId: selectedGroup || ""
                 }
 
                 await db.collection('drivers_users').doc(uid).set(fistData);
@@ -1135,7 +1138,8 @@ function Driver(){
             email: email ? email : "",
             cpf: withoutMaskCPF(cpf),
             statusDriver: status ? status : "",
-            history: history
+            history: history,
+            groupId: selectedGroup || ""
         }
 
         var address = {
@@ -1485,6 +1489,24 @@ function Driver(){
 
     };
 
+
+    async function loadingGroup() {
+        console.log("loadingGroup");
+
+        const dataGroup = await GroupService.getGroup(users.uidShipper);
+        console.log(dataGroup);
+        
+        // Mapear os documentos para obter os dados corretamente
+        const groups = dataGroup.docs.map(doc => ({
+            id: doc.id,
+            name: doc.data().name,
+            ...doc.data()
+        }));
+        
+        setGroup(groups); 
+
+    }
+
     return (
     <>
         { 
@@ -1711,6 +1733,21 @@ function Driver(){
                                             </div>
                                         </Col>
 
+                                    </Row>
+                                    <Row gutter={16} style={{ marginTop: '16px' }}>
+                                            <Col span={8}>
+                                                <div className="col-md-12">
+                                                    <label htmlFor="group" className="form-label">Grupo</label>
+                                                    <select className="form-select" id="group" value={selectedGroup}  onChange={(e)=> setSelectedGroup(e.target.value)} aria-label="">
+                                                        <option defaultValue="">Selecione</option>
+                                                        {group.map((grp) => (
+                                                            <option key={grp.id} value={grp.id}>
+                                                                {grp.name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </Col>
                                     </Row>
 
                                     <Row gutter={16} style={{ marginTop: '16px' }}>

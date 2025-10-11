@@ -490,7 +490,7 @@ function Freight() {
 
         const dataGroup = await GroupService.getGroup(users.uidShipper);
         console.log(dataGroup);
-        setGroup(dataGroup); 
+        setGroup(dataGroup.docs); 
 
     }
 
@@ -587,10 +587,11 @@ function Freight() {
                 // ???
                 setTotalAmountRoute(freightTage.totalAmountRoute);
 
-                console.log("freightTage.groupOrder", freight.groupOrder);
-
-                setGroup(freight.groupOrder);
-                setGroupOrder(freight.groupOrder || []);
+                if(freight.groupOrder) {
+                    setGroup(freight.groupOrder);
+                } else {
+                    loadingGroup();
+                }
 
                 setCarregando(0);
             })
@@ -618,12 +619,16 @@ function Freight() {
 
         if (isCopyTemp === false) {
             if (idVerify) {
-                loadingGroup();
+                // EDITANDO frete existente - não carrega grupo aqui, pois virá do freight.groupOrder
                 loadingInit(isCopyTemp);
                 loadingPoints();
                 searchIdPayment(idVerify);
+            } else {
+                // NOVO frete - carrega grupos da tabela tb_group
+                loadingGroup();
             }
         } else {
+            // COPIANDO frete - carrega grupos da tabela tb_group
             loadingGroup();
             loadingInit(isCopyTemp);
             loadingPoints(isCopyTemp);
@@ -633,7 +638,6 @@ function Freight() {
         loadingQueue();
         loadingCustomer();
         loadingShipper();
-        loadingGroup();
     }, [idVerify, isCopy]);
 
     async function save() {
@@ -756,8 +760,6 @@ function Freight() {
             groupOrder,
         };
 
-        // debugger;
-        // return;
 
         if (!ultimaRota.date_operation) {
             showMessage("O data de coleta precisa ser preenchido");
@@ -829,30 +831,30 @@ function Freight() {
                                 );
 
                                 //Salvar na tabela payment os dados do pagamento
-                                if(driver.paymentCondition || driver.valueNegotiated) {
+                                // if(driver.paymentCondition || driver.valueNegotiated) {
 
-                                    const paymentArray = driver.paymentCondition.split("/");
+                                //     const paymentArray = driver.paymentCondition.split("/");
 
-                                    // Percorrendo o array para acessar os valores
-                                    paymentArray.forEach(async (value, index) => {
+                                //     // Percorrendo o array para acessar os valores
+                                //     paymentArray.forEach(async (value, index) => {
                                         
-                                        // Nome Motorista / Número Orçamento / R$ 7.000,00 / Adiantamento / Status: Bloqueado
-                                        var data = {
-                                            idFreight: item.id,
-                                            driver: driverFreight.uidDriver,
-                                            order: numberSerial,
-                                            value: driver.valueNegotiated * parseInt(value) / 100, //Retirando a porcentagem
-                                            status: "Bloqueado"
-                                        }
+                                //         // Nome Motorista / Número Orçamento / R$ 7.000,00 / Adiantamento / Status: Bloqueado
+                                //         var data = {
+                                //             idFreight: item.id,
+                                //             driver: driverFreight.uidDriver,
+                                //             order: numberSerial,
+                                //             value: driver.valueNegotiated * parseInt(value) / 100, //Retirando a porcentagem
+                                //             status: "Bloqueado"
+                                //         }
 
-                                        //Salvando dados do pagamento
-                                        await paymentService.save(data);
+                                //         //Salvando dados do pagamento
+                                //         // await paymentService.save(data);
 
-                                        mdfeService.createPreMdfe(item.id)
+                                //         // mdfeService.createPreMdfe(item.id)
 
-                                    });                                    
+                                //     });                                    
 
-                                }
+                                // }
 
                                 console.log("[Criando frete] Enviando notificação para o motorista : " + driverUser.idNotification);
 
@@ -1108,6 +1110,9 @@ function Freight() {
                 };
             }
         }
+
+
+        debugger;
 
         // Atualização no banco
         try {
@@ -2174,6 +2179,8 @@ function Freight() {
         console.log("handleSaveGroup");
         console.log(resultado);
         setGroupOrder(resultado);
+        // Atualiza o estado group para refletir a nova ordenação na UI
+        setGroup(resultado);
     }
 
     const varifyHavingDriver = () => {
@@ -3998,7 +4005,7 @@ function Freight() {
                                                         <div className="flex-grow-1">
                                                             <GruposOrdenaveis 
                                                                 onSave={handleSaveGroup} 
-                                                                initialGroups={groupOrder && groupOrder.length > 0 ? groupOrder : group && group.length > 0 ? group : []}
+                                                                initialGroups={group && group.length > 0 ? group : []}
                                                             />
                                                         </div>
                                                     </div>
