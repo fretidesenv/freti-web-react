@@ -166,16 +166,26 @@ const driverService = {
     async deleteStatusMyFreight(idDriver, idFreight){
         console.log("Deletando status na fila do MyFrete")
         
-        firebase.firestore()
-            .collection('drivers_users')
-            .doc(idDriver)
-            .collection('myFreightsList')
-            .doc(idFreight)
-            .delete()
-            .catch(error => {
-                console.log(error) 
-            });
-
+        try {
+            const docRef = firebase.firestore()
+                .collection('drivers_users')
+                .doc(idDriver)
+                .collection('myFreightsList')
+                .doc(idFreight);
+            
+            // Verifica se o documento existe antes de deletar
+            const docSnapshot = await docRef.get();
+            
+            if (docSnapshot.exists) {
+                await docRef.delete();
+                console.log("Documento deletado com sucesso");
+            } else {
+                console.log("Documento não existe, nenhuma ação necessária");
+            }
+        } catch (error) {
+            console.log("Erro ao deletar status na fila do MyFrete");
+            console.log(error);
+        }
     },
 
 

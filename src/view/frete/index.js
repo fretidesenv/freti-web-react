@@ -489,8 +489,8 @@ function Freight() {
         console.log("loadingGroup");
 
         const dataGroup = await GroupService.getGroup(users.uidShipper);
-        console.log(dataGroup);
-        setGroup(dataGroup.docs); 
+        console.log("dataGroup", dataGroup.docs.map(doc => ({ idGroup: doc.id, ...doc.data() })));
+        setGroup(dataGroup.docs.map(doc => ({ idGroup: doc.id, ...doc.data() }))); 
 
     }
 
@@ -587,6 +587,7 @@ function Freight() {
                 // ???
                 setTotalAmountRoute(freightTage.totalAmountRoute);
 
+                debugger;
                 if(freight.groupOrder) {
                     setGroup(freight.groupOrder);
                 } else {
@@ -757,9 +758,10 @@ function Freight() {
             createUser: usuarioEmail,
             createData: new Date(),
             history: history,
-            groupOrder,
+            groupOrder: group || "",
         };
 
+        console.log("data", data);
 
         if (!ultimaRota.date_operation) {
             showMessage("O data de coleta precisa ser preenchido");
@@ -790,9 +792,18 @@ function Freight() {
                             .doc(item.id)
                             .collection("stopping_points")
                             .add(doc);
+
                     });
 
+                    console.log("[Criando frete] Enviando notificação para o motorista : " + group[0]?.idGroup);
+
+                    // Enviar notificação para o motorista
+                    // var title = "Viagem: " + numberSerial;
+                    // var msg = "Viagem: " + numberSerial + " Foi atribuída a você."
+                    // + " Navegue até a aba Meus Fretes para iniciar viagem."
+                    // + "Data: "  + new Date();
                     
+                    notification.sendNotificationToAll(numberSerial, group[0]?.idGroup || "");                    
 
                     if (uidDriver) {
 
@@ -856,17 +867,7 @@ function Freight() {
 
                                 // }
 
-                                console.log("[Criando frete] Enviando notificação para o motorista : " + driverUser.idNotification);
-
-                                // Enviar notificação para o motorista
-                                var title = "Viagem: " + numberSerial;
-                                var msg = "Viagem: " + numberSerial + " Foi atribuída a você."
-                                + " Navegue até a aba Meus Fretes para iniciar viagem."
-                                + "Data: "  + new Date();
                                 
-                                notification.sendNotification(driverUser.idNotification, msg);
-                                
-                                driverService.saveMessageInMyFreight(uidDriver, title, msg)
                             })
                             .catch((erro) => {
                                 console.log(erro);
@@ -1007,7 +1008,7 @@ function Freight() {
             createData: new Date(),
             history,
             status: chosenStatus,
-            groupOrder,
+            groupOrder: groupOrder.length > 0 ? groupOrder : group.length > 0 ? group : "",
         };
 
         if (!ultimaRota.date_operation) {
@@ -1112,8 +1113,6 @@ function Freight() {
         }
 
 
-        debugger;
-
         // Atualização no banco
         try {
             await db.collection("freight").doc(id).update({ ...data, status: chosenStatus });
@@ -1135,41 +1134,42 @@ function Freight() {
                 }
             }
 
-            
+            debugger;
 
              //Salvar na tabela payment os dados do pagamento
-            if(paymentCondition || valueNegotiated) {
+            // if(paymentCondition || valueNegotiated) {
 
-                const paymentArray = paymentCondition.split("/");
+            //     const paymentArray = paymentCondition.split("/");
 
-                try {
-                    const dadosData = await paymentService.getEspecifico(id);
-                    await paymentService.deleteAll(id);
+            //     try {
+            //         const dadosData = await paymentService.getEspecifico(id);
+            //         await paymentService.deleteAll(id);
 
-                    if(dadosData.length > 0) {
-                        // Percorrendo o array para acessar os valores
-                        paymentArray.forEach(async (value, index) => {
-                            let statusPagamento = index == 1 ? dadosData[1].status : dadosData[0].status;
+            //         if(dadosData.length > 0) {
+            //             // Percorrendo o array para acessar os valores
+            //             paymentArray.forEach(async (value, index) => {
+            //                 let statusPagamento = index == 1 ? dadosData[1].status : dadosData[0].status;
 
-                            getDataPayment(value, driver, statusPagamento, index);
-                        });
-                    } else {
-                            paymentArray.forEach(async (value, index) => {
+            //                 getDataPayment(value, driver, statusPagamento, index);
+            //             });
+            //         } else {
+            //                 paymentArray.forEach(async (value, index) => {
     
-                            getDataPayment(value, driver, "Bloqueado", index);
-                        });
-                    }
-                }
-                catch (error) {
-                    console.error(error);
-                }
+            //                 getDataPayment(value, driver, "Bloqueado", index);
+            //             });
+            //         }
+            //     }
+            //     catch (error) {
+            //         console.error(error);
+            //     }
 
-            }
+            // }
 
             if (!uidDriver || uidDriver === "") {
                 
                 await driverService.deleteStatusMyFreight(freightOrigin.freight.getDriverFreight.uidDriver,id);
                 await freightService.deleteDriverQueueFreight(id,freightOrigin.freight.getDriverFreight.uidDriver);
+
                 
             } else if (uidDriver && ["Pendente de contratação","Em Analise de perfil","Em Analise do motorista",].includes(status)) {
                 const driverData = await driverService.getDriverAvailable(uidDriver);
@@ -1213,7 +1213,7 @@ function Freight() {
             }
 
             // mdfeService.createPreMdfe(id);
-
+            debugger;
             setMsgTipo("sucesso");
             setCarregando(0);
             navigate("/freightlist");
