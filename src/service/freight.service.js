@@ -21,16 +21,18 @@ const freightService = {
         console.log("[saveStatusQueueFreight] Salvando status na fila do frete " + status)
         
         var data = {
-            status: status
+            status: status,
+            updatedAt: new Date().toISOString()
         }
 
-        db.collection('freight')
+        return db.collection('freight')
             .doc(id)
             .collection('queue')
             .doc(idQueue)
             .update(data)
             .catch(error => {
                 console.log(error)
+                throw error;
             });
     },
 

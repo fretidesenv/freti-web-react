@@ -14,41 +14,41 @@ function FreightList() {
   const [freight, setFreight] = useState([]);
   const [carregando, setCarregando] = useState(1);
 
-  let freightList = [];
-
   var userLogado = useSelector((state) => state.usuarioLogado);
-
-  function loadInitial(loading) {
-
-    if (!loading) {
-      //Pesquisando por status da tela
-      firebase
-        .firestore()
-        .collection("freight")
-        .orderBy("createData", "desc")
-        .get()
-        .then(async (result) => {
-          result.docs.forEach(async (doc) => {
-            freightList.push({
-              id: doc.id,
-              ...doc.data(),
-            });
-        });
-          setFreight(freightList);
-          setCarregando(0);
-        })
-        .catch((error) => {
-          setCarregando(0);
-          console.log(error);
-        });
-    }
-  }
 
   useEffect(() => {
     if (userLogado > 0) {
-      loadInitial();
+      setCarregando(1);
+      
+      // Usando onSnapshot para atualização em tempo real
+      const unsubscribe = firebase
+        .firestore()
+        .collection("freight")
+        .orderBy("createData", "desc")
+        .onSnapshot(
+          (snapshot) => {
+            const freightList = [];
+            
+            snapshot.docs.forEach((doc) => {
+              freightList.push({
+                id: doc.id,
+                ...doc.data(),
+              });
+            });
+            
+            setFreight(freightList);
+            setCarregando(0);
+          },
+          (error) => {
+            console.error("Erro ao carregar fretes:", error);
+            setCarregando(0);
+          }
+        );
+
+      // Limpa o listener quando o componente desmontar
+      return () => unsubscribe();
     }
-  }, [carregando]);
+  }, [userLogado]);
 
   return (
     <>

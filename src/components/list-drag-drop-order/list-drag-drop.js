@@ -32,14 +32,22 @@ export default function GruposOrdenaveis({onSave, initialGroups = []}) {
     setGrupos(items);
     
     // Chama onSave automaticamente após reordenar
-    const resultado = items.map((g, index) => ({
-      id: g.id || g.idGroup, // Mantém compatibilidade com ambos formatos
-      idGroup: g.id || g.idGroup,
-      order: index + 1,
-      name: g.data ? g.data().name : g.name,
-      active: (index + 1) == 1 ? true : false,
-      date_include: new Date()
-    }));
+    const resultado = items.map((g, index) => {
+      const item = {
+        id: g.id || g.idGroup, // Mantém compatibilidade com ambos formatos
+        idGroup: g.id || g.idGroup,
+        order: index + 1,
+        name: g.data ? g.data().name : g.name,
+        active: (index + 1) == 1 ? true : false
+      };
+      
+      // Apenas o primeiro registro tem date_include
+      if (index === 0) {
+        item.date_include = new Date();
+      }
+      
+      return item;
+    });
 
     console.log("Nova ordem dos grupos:", resultado);
     onSave(resultado);

@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import firebase from '../../config/firebase';
-import { doc, getDoc } from "firebase/firestore";
 import { useSelector } from 'react-redux';
 import Stack from '@mui/material/Stack';
 import { Chip, Badge } from '@mui/material';
@@ -26,23 +25,43 @@ const DriverBadge = ({ recordId }) => {
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const db = firebase.firestore();
-      
-      const freightDoc = await db.collection('freight').doc(recordId).get();
-      if (freightDoc.exists) {
-        setStatus(freightDoc?.data()?.status?.describe);
-      }
-      
-      const listDriverInFila = [];
-      const result = await db.collection('freight').doc(recordId).collection('queue').get();
-      result.docs.forEach(doc => {
-        listDriverInFila.push({ id: doc.id, ...doc.data() });
-      });
-      setDriversInFila(listDriverInFila);
-    };
+    if (!recordId) return;
 
-    fetchData();
+    const db = firebase.firestore();
+    
+    // Listener para o documento do frete (status)
+    const unsubscribeFreight = db.collection('freight').doc(recordId)
+      .onSnapshot(
+        (freightDoc) => {
+          if (freightDoc.exists) {
+            setStatus(freightDoc.data()?.status?.describe);
+          }
+        },
+        (error) => {
+          console.error("Erro ao carregar status do frete:", error);
+        }
+      );
+
+    // Listener para a fila de motoristas
+    const unsubscribeQueue = db.collection('freight').doc(recordId).collection('queue')
+      .onSnapshot(
+        (snapshot) => {
+          const listDriverInFila = [];
+          snapshot.docs.forEach(doc => {
+            listDriverInFila.push({ id: doc.id, ...doc.data() });
+          });
+          setDriversInFila(listDriverInFila);
+        },
+        (error) => {
+          console.error("Erro ao carregar fila de motoristas:", error);
+        }
+      );
+
+    // Limpa os listeners quando o componente desmontar ou recordId mudar
+    return () => {
+      unsubscribeFreight();
+      unsubscribeQueue();
+    };
   }, [recordId]);
 
   if (status === 'Finalizado' || status === 'Contratado') {
@@ -80,105 +99,137 @@ const DataFreteTable = ({ data }) => {
   };
 
   const searchInput = useRef(null);
+  const queueUnsubscribeRef = useRef(null);
 
   const user = useSelector(state => state.user);
 
   const getDriversQueue = (id) => {
     const db = firebase.firestore();
-    const listDriverInFila = [];
-    db.collection('freight').doc(id).collection('queue')
-      .get().then(async (result) => {
-        result.docs.forEach(doc => {
-          listDriverInFila.push({
-            id: doc.id,
-            ...doc.data()
-          });
-        });
-        setDriversInFila(listDriverInFila);
-        handleOpen();
-      }).catch(error => {
-        console.log(error)
-      });
-  };
-
-  const fetchData = async () => {
-    var snapshot = "";
-
-    if(user.perfil == "Master") {
-        snapshot = await firebase.firestore()
-            .collection("freight")
-            .get();
-    } else {
-      snapshot = await firebase.firestore()
-          .collection("freight")
-          .where('shipper.uid', '==', user.uidShipper)
-          .get();
+    
+    // Limpa o listener anterior se existir
+    if (queueUnsubscribeRef.current) {
+      queueUnsubscribeRef.current();
+      queueUnsubscribeRef.current = null;
     }
-  
-    const documents = await Promise.all(snapshot.docs.map(async (docSnap) => {
-      const docData = docSnap.data();
-      const uid = docData?.freight?.getDriverFreight?.uidDriver;
-  
-      // Se tiver uidDriver, tenta buscar o nome do motorista
-      if (uid) {
-        
-        try {
-          const driverRef = doc(db, "drivers_users", uid);
-          const driverSnap = await getDoc(driverRef);
-  
-          if (driverSnap.exists()) {
-            const driverData = driverSnap.data();
-            return {
-              id: docSnap.id,
-              ...docData,
-              freight: {
-                ...docData.freight,
-                getDriverFreight: {
-                  ...docData.freight.getDriverFreight,
-                  name: driverData.name || "Nome não encontrado",
-                },
-              },
-            };
-          } else {
-            return {
-              id: docSnap.id,
-              ...docData,
-              getDriverFreight: {
-                ...docData.getDriverFreight,
-                name: "Motorista não encontrado",
-              },
-            };
-          }
-        } catch (error) {
-          console.error("Erro ao buscar motorista:", error);
-          return {
-            id: docSnap.id,
-            ...docData,
-            getDriverFreight: {
-              ...docData.getDriverFreight,
-              name: "Erro ao buscar nome",
-            },
-          };
+    
+    // Usando onSnapshot para atualização em tempo real da fila
+    queueUnsubscribeRef.current = db.collection('freight').doc(id).collection('queue')
+      .onSnapshot(
+        (snapshot) => {
+          const listDriverInFila = [];
+          snapshot.docs.forEach(doc => {
+            listDriverInFila.push({
+              id: doc.id,
+              ...doc.data()
+            });
+          });
+          setDriversInFila(listDriverInFila);
+          handleOpen();
+        },
+        (error) => {
+          console.error("Erro ao carregar fila de motoristas:", error);
         }
-      }
-      console.log("não tem uid");
-  
-      // Se não tiver uidDriver, retorna como está
-      return { id: docSnap.id, ...docData };
-    }));
-  
-    setData(documents);
+      );
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (!user) return;
+
+    let query;
+    
+    if(user.perfil == "Master") {
+        query = firebase.firestore()
+            .collection("freight");
+    } else {
+      query = firebase.firestore()
+          .collection("freight")
+          .where('shipper.uid', '==', user.uidShipper);
+    }
+
+    // Usando onSnapshot para atualização em tempo real
+    const unsubscribe = query.onSnapshot(
+      async (snapshot) => {
+        const documents = await Promise.all(snapshot.docs.map(async (docSnap) => {
+          const docData = docSnap.data();
+          const uid = docData?.freight?.getDriverFreight?.uidDriver;
+    
+          // Se tiver uidDriver, tenta buscar o nome do motorista
+          if (uid) {
+            
+            try {
+              const driverSnap = await firebase.firestore()
+                .collection("drivers_users")
+                .doc(uid)
+                .get();
+    
+              if (driverSnap.exists) {
+                const driverData = driverSnap.data();
+                return {
+                  id: docSnap.id,
+                  ...docData,
+                  freight: {
+                    ...docData.freight,
+                    getDriverFreight: {
+                      ...docData.freight.getDriverFreight,
+                      name: driverData.name || "Nome não encontrado",
+                    },
+                  },
+                };
+              } else {
+                return {
+                  id: docSnap.id,
+                  ...docData,
+                  getDriverFreight: {
+                    ...docData.getDriverFreight,
+                    name: "Motorista não encontrado",
+                  },
+                };
+              }
+            } catch (error) {
+              console.error("Erro ao buscar motorista:", error);
+              return {
+                id: docSnap.id,
+                ...docData,
+                getDriverFreight: {
+                  ...docData.getDriverFreight,
+                  name: "Erro ao buscar nome",
+                },
+              };
+            }
+          }
+    
+          // Se não tiver uidDriver, retorna como está
+          return { id: docSnap.id, ...docData };
+        }));
+    
+        setData(documents);
+      },
+      (error) => {
+        console.error("Erro ao carregar fretes:", error);
+      }
+    );
+
+    // Limpa o listener quando o componente desmontar
+    return () => {
+      unsubscribe();
+      // Também limpa o listener da fila se existir
+      if (queueUnsubscribeRef.current) {
+        queueUnsubscribeRef.current();
+        queueUnsubscribeRef.current = null;
+      }
+    };
+  }, [user]);
 
   const handleOpen = () => {
     setOpenModal(true);
   };
 
   const handleClose = () => {
+    // Limpa o listener da fila quando o modal fechar
+    if (queueUnsubscribeRef.current) {
+      queueUnsubscribeRef.current();
+      queueUnsubscribeRef.current = null;
+    }
     setOpenModal(false);
   };
 
@@ -214,7 +265,7 @@ const DataFreteTable = ({ data }) => {
         .delete()
         .then(() => {
           alert("Frete excluído com sucesso!");
-          fetchData();
+          // Não precisa chamar fetchData() - o listener onSnapshot atualiza automaticamente
         })
       } else {
         return;
@@ -246,7 +297,7 @@ const DataFreteTable = ({ data }) => {
       case 'Em transito':
         return commonChip(status, 'success');
       case 'Entregue':
-        return commonChip(status, 'primary');
+        return commonChip(status, 'warning');
       case 'Finalizado':
         return commonChip(status, 'error');
       default:

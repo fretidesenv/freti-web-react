@@ -94,12 +94,13 @@ const driverService = {
         console.log("salvando status na fila do MyFrete" + status)
 
         var data = {
-            status: status
+            status: status,
+            updatedAt: new Date().toISOString()
         }
 
         console.log(data)
-
-        firebase.firestore()
+ 
+        return firebase.firestore()
             .collection('drivers_users')
             .doc(idDriver)
             .collection('myFreightsList')
@@ -107,6 +108,7 @@ const driverService = {
             .update(data)
             .catch(error => {
                 console.log(error)
+                throw error;
             });
     },
 
