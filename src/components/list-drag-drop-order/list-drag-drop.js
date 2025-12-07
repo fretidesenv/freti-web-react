@@ -38,11 +38,12 @@ export default function GruposOrdenaveis({onSave, initialGroups = []}) {
         idGroup: g.id || g.idGroup,
         order: index + 1,
         name: g.data ? g.data().name : g.name,
-        active: (index + 1) == 1 ? true : false
+        
       };
       
-      // Apenas o primeiro registro tem date_include
+      // Apenas o primeiro registro tem date_include e active: true
       if (index === 0) {
+        item.active = (index + 1) == 1 ? true : false
         item.date_include = new Date();
       }
       

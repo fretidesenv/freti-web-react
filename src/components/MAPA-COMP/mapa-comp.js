@@ -59,6 +59,13 @@ const MapComponent = ({ points, idFreight, searchLatestPositions }) => {
     
 
     const fetchRoute = async () => {
+      // Endpoint da API de direções (pode ser configurado via variável de ambiente)
+      const directionsEndpoint = process.env.REACT_APP_DIRECTIONS_API_URL || 
+        "https://8t7wcp4ip0.execute-api.us-east-1.amazonaws.com/dev/directions";
+      
+      // Declara validCoordinates fora do try para estar acessível no catch
+      let validCoordinates = [];
+      
       try {
         // Mapear os pontos de coordenadas
         const coordinates = points.map((point) => point?.coords);
@@ -80,20 +87,97 @@ const MapComponent = ({ points, idFreight, searchLatestPositions }) => {
           return; // Evitar tentar buscar rotas com dados inválidos
         }
 
+        debugger;
+        
+        // Valida e formata todas as coordenadas
+        // Leaflet usa [latitude, longitude], mas OpenRouteService espera [longitude, latitude]
+        validCoordinates = [];
+        
+        // Adiciona a posição inicial se válida
+        if (startPosition[0]?.longitude && startPosition[0]?.latitude) {
+          const lng = parseFloat(startPosition[0].longitude);
+          const lat = parseFloat(startPosition[0].latitude);
+          if (!isNaN(lng) && !isNaN(lat) && lng >= -180 && lng <= 180 && lat >= -90 && lat <= 90) {
+            validCoordinates.push([lng, lat]);
+          }
+        }
+
+        // Adiciona os pontos de parada
+        // point.coords está no formato [latitude, longitude] (formato Leaflet)
+        // Precisamos converter para [longitude, latitude] para OpenRouteService
+        coordinates.forEach((coord, index) => {
+          if (Array.isArray(coord) && coord.length >= 2) {
+            // point.coords vem como [latitude, longitude] do Leaflet
+            const lat = parseFloat(coord[0]);
+            const lng = parseFloat(coord[1]);
+            
+            console.log(`Coordenada ${index} original [lat, lng]:`, [lat, lng]);
+            
+            // Valida se são números válidos e dentro dos ranges corretos
+            if (!isNaN(lat) && !isNaN(lng) && 
+                lat >= -90 && lat <= 90 && 
+                lng >= -180 && lng <= 180) {
+              // Converte para [lng, lat] para OpenRouteService
+              const formattedCoord = [lng, lat];
+              validCoordinates.push(formattedCoord);
+              console.log(`Coordenada ${index} formatada [lng, lat]:`, formattedCoord);
+            } else {
+              console.warn("Coordenada inválida ignorada:", coord, {
+                lat: lat,
+                lng: lng,
+                latValid: lat >= -90 && lat <= 90,
+                lngValid: lng >= -180 && lng <= 180
+              });
+            }
+          } else {
+            console.warn("Coordenada não é um array válido:", coord);
+          }
+        });
+
+        // Verifica se há pelo menos 2 coordenadas válidas
+        if (validCoordinates.length < 2) {
+          console.error("Erro: É necessário pelo menos 2 coordenadas válidas para calcular a rota");
+          return;
+        }
+
+        console.log("Total de coordenadas válidas:", validCoordinates.length);
+        console.log("Coordenadas formatadas para envio:", JSON.stringify(validCoordinates, null, 2));
+
+        // Prepara o payload para envio
+        // OpenRouteService espera coordenadas no formato [longitude, latitude]
+        const requestPayload = {
+          coordinates: validCoordinates,
+          // Parâmetros opcionais que podem ajudar
+          format: 'json',
+          geometry: true
+        };
+        
+        console.log("Payload completo que será enviado:", JSON.stringify(requestPayload, null, 2));
+        console.log("Endpoint:", directionsEndpoint);
+        console.log("Número de coordenadas:", validCoordinates.length);
+        console.log("Primeira coordenada [lng, lat]:", validCoordinates[0]);
+        console.log("Última coordenada [lng, lat]:", validCoordinates[validCoordinates.length - 1]);
+        console.log("=== INICIANDO REQUISIÇÃO PARA API ===");
+
         // Enviando os dados para a API de rotas
+        // IMPORTANTE: Esta é a ÚNICA requisição POST que fazemos para este endpoint
         const response = await axios.post(
-          "https://8t7wcp4ip0.execute-api.us-east-1.amazonaws.com/dev/directions",
+          directionsEndpoint,
+          requestPayload,
           {
-            coordinates:
-              startPosition[0].longitude && startPosition[0].latitude
-                ? [
-                    [startPosition[0].longitude, startPosition[0].latitude],
-                    ...coordinates.map((coord) => [coord[1], coord[0]]), // Corrigindo a ordem para longitude, latitude
-                  ]
-                : [...coordinates.map((coord) => [coord[1], coord[0]])],
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            timeout: 30000, // 30 segundos de timeout
+            // Evita que o axios faça requisições OPTIONS automáticas desnecessárias
+            withCredentials: false
           }
         );
+        
+        console.log("=== REQUISIÇÃO CONCLUÍDA COM SUCESSO ===");
 
+        debugger;
         console.log("Resposta da API de rotas:", response.data);
 
         if (response.data.routes && response.data.routes.length > 0) {
@@ -124,10 +208,44 @@ const MapComponent = ({ points, idFreight, searchLatestPositions }) => {
           console.error("Erro: Nenhuma rota foi retornada pela API.");
         }
       } catch (error) {
-        console.error(
-          "Erro ao buscar rota:",
-          error.response ? error.response.data : error.message
-        );
+        console.error("=== ERRO AO BUSCAR ROTA ===");
+        console.error("Status HTTP:", error.response?.status);
+        console.error("Status Text:", error.response?.statusText);
+        console.error("Dados do erro completo:", error.response?.data);
+        console.error("Request enviado:", {
+          url: directionsEndpoint,
+          coordinates: validCoordinates,
+          coordinatesCount: validCoordinates.length,
+          payload: JSON.stringify({
+            coordinates: validCoordinates,
+            format: 'json',
+            geometry: true
+          }, null, 2)
+        });
+        console.error("Mensagem do erro:", error.message);
+        console.error("Stack trace:", error.stack);
+        
+        // Mostra erro mais detalhado no console
+        if (error.response?.data?.error) {
+          console.error("Detalhes do erro da API:", error.response.data.error);
+          if (error.response.data.error.message) {
+            console.error("Mensagem de erro da API:", error.response.data.error.message);
+          }
+          if (error.response.data.error.code) {
+            console.error("Código de erro:", error.response.data.error.code);
+          }
+        }
+        
+        // Se for erro 400, pode ser problema de formato ou distância
+        if (error.response?.status === 400) {
+          console.warn("⚠️ Erro 400 - Possíveis causas:");
+          console.warn("1. Coordenadas muito distantes (limite da API)");
+          console.warn("2. Formato de coordenadas incorreto");
+          console.warn("3. Parâmetros faltando ou inválidos");
+          console.warn("4. Limite de waypoints excedido");
+        }
+        
+        console.error("=== FIM DO ERRO ===");
       }
     };
 

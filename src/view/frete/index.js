@@ -51,7 +51,7 @@ function Freight() {
 
     //Veiculo
     const [occupation, setOccupation] = useState();
-    const [freeOfCharge, setFreeOfCharge] = useState();
+    const [freeOfCharge, setFreeOfCharge] = useState(false);
 
     var nameUser = useSelector((state) => state?.user?.name);
 
@@ -489,8 +489,31 @@ function Freight() {
         console.log("loadingGroup");
 
         const dataGroup = await GroupService.getGroup(users.uidShipper);
-        console.log("dataGroup", dataGroup.docs.map(doc => ({ idGroup: doc.id, ...doc.data() })));
-        setGroup(dataGroup.docs.map(doc => ({ idGroup: doc.id, ...doc.data() }))); 
+        // console.log("dataGroup", dataGroup.docs.map(doc => ({ idGroup: doc.id, ...doc.data() })));
+        
+        // Formata os grupos: primeiro com active: true, demais sem active
+        const formattedGroups = dataGroup.docs.map((doc, index) => {
+            const groupData = { idGroup: doc.id, ...doc.data() };
+            const formatted = {
+                active: false,
+                idGroup: groupData.idGroup,
+                description: groupData.description,
+                name: groupData.name,
+                uidShipper: groupData.uidShipper
+            };
+            
+            // Apenas o primeiro registro tem active: true
+            if (index === 0) {
+                formatted.active = true;
+                formatted.date_include = new Date();
+            }
+            
+            return formatted;
+        });
+
+        console.log("formattedGroups", formattedGroups);
+        
+        setGroup(formattedGroups); 
 
     }
 
@@ -589,7 +612,26 @@ function Freight() {
 
                 debugger;
                 if(freight.groupOrder) {
-                    setGroup(freight.groupOrder);
+                    // Formata os grupos: primeiro com active: true, demais sem active
+                    const formattedGroups = freight.groupOrder.map((groupData, index) => {
+                        const formatted = {
+                            active: false,
+                            idGroup: groupData.idGroup,
+                            // description: groupData.description,
+                            name: groupData.name,
+                            // uidShipper: groupData.uidShipper
+                        };
+                        
+                        // Apenas o primeiro registro tem active: true
+                        if (index === 0) {
+                            formatted.active = true;
+                            formatted.date_include = new Date();
+                        }
+                        
+                        return formatted;
+                    });
+                    
+                    setGroup(formattedGroups);
                 } else {
                     loadingGroup();
                 }
@@ -870,8 +912,6 @@ function Freight() {
                     // + " Navegue até a aba Meus Fretes para iniciar viagem."
                     // + "Data: "  + new Date();
                     
-                    debugger;
-                    notification.sendNotificationToAll(numberSerial, group[0]?.idGroup || "", primeiraRota.date_operation);                    
 
                     if (uidDriver) {
 
@@ -909,6 +949,20 @@ function Freight() {
                                     "04"
                                 );
 
+                                console.log("[Criando frete] Enviando notificação para o motorista : " + driverUser.idNotification);
+
+                                // Enviar notificação para o motorista
+                                var title = " FRETI - Chegou uma oportunidade de frete para você " + driverUser.name + ", confira o frete: " + numberSerial;
+                                const currentDateTimeFormatted = formatDateTimeToBrazilian(new Date());
+                                var msg = "O Frete " + numberSerial + " com data para coleta em " + primeiraRota.date_operation + " foi atribuído a você, confira agora mesmo!"
+                                + " Data: " + currentDateTimeFormatted
+                                
+                                notification.sendNotification(driverUser.idNotification, msg);
+                                
+                                driverService.saveMessageInMyFreight(uidDriver, title, msg)
+
+
+
                                 //Salvar na tabela payment os dados do pagamento
                                 // if(driver.paymentCondition || driver.valueNegotiated) {
 
@@ -940,6 +994,8 @@ function Freight() {
                             .catch((erro) => {
                                 console.log(erro);
                             });
+                    }else{
+                        notification.sendNotificationToAll(numberSerial, group[0]?.idGroup || "", primeiraRota.date_operation);                    
                     }
                     setCarregando(0);
                     setMsgTipo("sucesso");
@@ -1364,7 +1420,7 @@ function Freight() {
             showMessage(
                 "O campo Livre de Carga e descarga da cessão Veículo precisa ser preenchido"
             );
-            document.getElementById("freeOfCharge").focus();
+            setFreeOfCharge(false);
             return;
         }
         if (!product) {
